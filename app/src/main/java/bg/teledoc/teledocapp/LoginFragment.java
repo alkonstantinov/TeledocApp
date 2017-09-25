@@ -21,7 +21,7 @@ import bg.teledoc.teledocapp.Callbacks.ServerAPICallback;
 import bg.teledoc.teledocapp.Requests.Requests;
 
 
-public class LoginFragment extends Fragment {
+public class LoginFragment extends BaseFragment {
 
 
     public LoginFragment() {
@@ -48,6 +48,7 @@ public class LoginFragment extends Fragment {
                 Requests.Login(
                         ((EditText) v.findViewById(R.id.tbUserName)).getText().toString(),
                         ((EditText) v.findViewById(R.id.tbPassword)).getText().toString(),
+                        GetMain().getSessionId(),
                         getContext(),
                         new ServerAPICallback() {
                             @Override
@@ -58,7 +59,7 @@ public class LoginFragment extends Fragment {
                                     if (res.get("LevelId").toString().equals("-1"))
                                         Toast.makeText(getContext(),R.string.invalidusername,Toast.LENGTH_LONG).show();
                                     else
-                                        Toast.makeText(getContext(),"ОК",Toast.LENGTH_LONG).show();
+                                        GetMain().gotoFragment(new PatientMainFragment());
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }

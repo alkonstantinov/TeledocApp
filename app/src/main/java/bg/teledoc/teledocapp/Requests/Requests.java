@@ -51,7 +51,7 @@ public class Requests {
         queue.add(getRequest);
     }
 
-    public static void Login(final String username, final String password, Context context, final ServerAPICallback cb) {
+    public static void Login(final String username, final String password, final String sessionId, Context context, final ServerAPICallback cb) {
         RequestQueue queue = Volley.newRequestQueue(context);
         final String result;
         StringRequest postRequest = new StringRequest(Request.Method.POST, BaseUrl + "login",
@@ -76,7 +76,72 @@ public class Requests {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("Username", username);
                 params.put("Password", password);
+                params.put("sessionId", sessionId);
 
+                return params;
+            }
+
+        };
+        queue.add(postRequest);
+    }
+
+
+    public static void IssuesNotClosed(final String sessionId, Context context, final ServerAPICallback cb) {
+        RequestQueue queue = Volley.newRequestQueue(context);
+        final String result;
+        StringRequest postRequest = new StringRequest(Request.Method.POST, BaseUrl + "getissuesnotclosed",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // response
+                        cb.onResult(response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // error
+                        Log.d("Error.Response", error.getMessage());
+                        cb.onError(error.getMessage());
+                    }
+                }
+        ) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("sessionId", sessionId);
+                return params;
+            }
+
+        };
+        queue.add(postRequest);
+    }
+
+
+    public static void IssuesClosed(final String sessionId, Context context, final ServerAPICallback cb) {
+        RequestQueue queue = Volley.newRequestQueue(context);
+        final String result;
+        StringRequest postRequest = new StringRequest(Request.Method.POST, BaseUrl + "getclosedissues",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // response
+                        cb.onResult(response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // error
+                        Log.d("Error.Response", error.getMessage());
+                        cb.onError(error.getMessage());
+                    }
+                }
+        ) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("sessionId", sessionId);
                 return params;
             }
 

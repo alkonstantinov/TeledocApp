@@ -11,5 +11,11 @@
     <string name="invalidusername">Невалиден имейл или парола</string>
     <string name="forgottenpassword">Забравена парола</string>
     <string name="registration">Регистрация</string>
+    <string name="welcome">Добре дошли</string>
+    <string name="openissues">Търсене на консултация</string>
+    <string name="closedissues">Приключени консултации</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
