@@ -4,27 +4,34 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuInflater;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URISyntaxException;
 import java.util.Locale;
 
 import bg.teledoc.teledocapp.Callbacks.ServerAPICallback;
 import bg.teledoc.teledocapp.Requests.Requests;
+import io.socket.client.IO;
+import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 
 public class MainActivity extends AppCompatActivity {
+    private Socket socket;
+    public Socket getSocket() {
+        return socket;
+    }
+
+    public void setSocket(Socket socket) {
+        this.socket = socket;
+    }
 
     private String sessionId;
 
@@ -62,6 +69,37 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+        try {
+            setSocket(IO.socket("http://10.0.2.2"));
+
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+
+
+        getSocket().on(Socket.EVENT_CONNECT, new Emitter.Listener() {
+
+            @Override
+            public void call(Object... args) {
+                int q = 3;
+            }
+
+        }).on("event", new Emitter.Listener() {
+
+            @Override
+            public void call(Object... args) {
+            }
+
+        }).on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
+
+            @Override
+            public void call(Object... args) {
+            }
+
+        });
+
+
+        getSocket().connect();
 
     }
 
@@ -85,10 +123,10 @@ public class MainActivity extends AppCompatActivity {
         Configuration conf = getBaseContext().getResources().getConfiguration();
         Locale loc = null;
 
-        MenuItem bBG = (MenuItem)menu.findItem(R.id.miBG);
+        MenuItem bBG = (MenuItem) menu.findItem(R.id.miBG);
         bBG.setVisible(false);
 
-        MenuItem bEN = (MenuItem)menu.findItem(R.id.miEN);
+        MenuItem bEN = (MenuItem) menu.findItem(R.id.miEN);
         bEN.setVisible(false);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -103,9 +141,6 @@ public class MainActivity extends AppCompatActivity {
         } else {
             bEN.setVisible(true);
         }
-
-
-
 
 
     }
@@ -146,7 +181,6 @@ public class MainActivity extends AppCompatActivity {
 
         return true;
     }
-
 
 
 }

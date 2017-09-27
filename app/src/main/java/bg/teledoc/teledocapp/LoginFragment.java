@@ -59,7 +59,18 @@ public class LoginFragment extends BaseFragment {
                                     if (res.get("LevelId").toString().equals("-1"))
                                         Toast.makeText(getContext(),R.string.invalidusername,Toast.LENGTH_LONG).show();
                                     else
-                                        GetMain().gotoFragment(new PatientMainFragment());
+                                    {
+                                        GetMain().getSocket().emit("iam",res.get("UserId"));
+                                        switch(Integer.parseInt(res.get("LevelId").toString()))
+                                        {
+                                            case 2:
+                                            case 3:GetMain().gotoFragment(new ExpertMainFragment());break;
+                                            case 4:GetMain().gotoFragment(new PatientMainFragment());break;
+                                        }
+
+
+                                    }
+
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }

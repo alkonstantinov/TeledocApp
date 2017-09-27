@@ -149,4 +149,67 @@ public class Requests {
         queue.add(postRequest);
     }
 
+    public static void IssuesByExpert(final String sessionId, Context context, final ServerAPICallback cb) {
+        RequestQueue queue = Volley.newRequestQueue(context);
+        final String result;
+        StringRequest postRequest = new StringRequest(Request.Method.POST, BaseUrl + "getissuesbyexpert",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // response
+                        cb.onResult(response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // error
+                        Log.d("Error.Response", error.getMessage());
+                        cb.onError(error.getMessage());
+                    }
+                }
+        ) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("sessionId", sessionId);
+                return params;
+            }
+
+        };
+        queue.add(postRequest);
+    }
+
+    public static void IssuesTaken(final String sessionId, Context context, final ServerAPICallback cb) {
+        RequestQueue queue = Volley.newRequestQueue(context);
+        final String result;
+        StringRequest postRequest = new StringRequest(Request.Method.POST, BaseUrl + "gettakenissues",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // response
+                        cb.onResult(response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // error
+                        Log.d("Error.Response", error.getMessage());
+                        cb.onError(error.getMessage());
+                    }
+                }
+        ) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("sessionId", sessionId);
+                return params;
+            }
+
+        };
+        queue.add(postRequest);
+    }
+
+
 }
