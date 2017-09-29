@@ -77,7 +77,7 @@ public class IssueTargetFragment extends BaseFragment {
 
     private void Next() {
         try {
-            JSONObject issue = GetMain().getIssue();
+            final JSONObject issue = GetMain().getIssue();
             if (rbMe.isChecked())
                 issue.put("whoid", 1);
             else
@@ -86,6 +86,37 @@ public class IssueTargetFragment extends BaseFragment {
                 issue.put("reqexpertlevelid", 1);
             else
                 issue.put("reqexpertlevelid", 2);
+
+            Requests.IssueLastGet(GetMain().getSessionId(), issue.getInt("whoid"), getContext(), new ServerAPICallback() {
+                @Override
+                public void onResult(String result) {
+                    try {
+
+                        if (!result.equals("")) {
+                            JSONObject oldIssue = new JSONObject(result);
+                            issue.put("allergy",oldIssue.getJSONArray("allergies"));
+                            issue.put("answertypeid",oldIssue.getInt("answertypeid"));
+
+                            issue.put("additionalinfo",oldIssue.getString("additionalinfo"));
+                            issue.put("sexid",oldIssue.getString("genderid"));
+                            issue.put("birthmonth",oldIssue.getInt("birthmonth"));
+                            issue.put("birthyear",oldIssue.getInt("birthyear"));
+                            issue.put("chronic",oldIssue.getJSONArray("chronics"));
+
+                        }
+                        GetMain().gotoFragment(new IssueDescriptionFragment());
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onError(Object error) {
+
+                }
+            });
+
         } catch (JSONException ex) {
         }
     }

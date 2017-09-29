@@ -11,12 +11,27 @@
         android:orientation="vertical">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-
+            <ImageButton
+                android:id="@+id/bPrev"
+                android:layout_width="wrap_content"
+                android:layout_weight="0.2"
+                android:visibility="invisible"
+                android:layout_height="wrap_content"
+                android:src="@drawable/prev"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.6"
+                android:id="@+id/lError"
+                android:visibility="invisible"
+                />
             <ImageButton
                 android:id="@+id/bNext"
+                android:layout_weight="0.2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/next"

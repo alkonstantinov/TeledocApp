@@ -243,4 +243,36 @@ public class Requests {
         };
         queue.add(postRequest);
     }
+
+    public static void IssueLastGet(final String sessionId, final int whoId, Context context, final ServerAPICallback cb) {
+        RequestQueue queue = Volley.newRequestQueue(context);
+        final String result;
+        StringRequest postRequest = new StringRequest(Request.Method.POST, BaseUrl + "getlastissue",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // response
+                        cb.onResult(response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // error
+                        Log.d("Error.Response", error.getMessage());
+                        cb.onError(error.getMessage());
+                    }
+                }
+        ) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("sessionId", sessionId);
+                params.put("whoId", whoId + "");
+                return params;
+            }
+
+        };
+        queue.add(postRequest);
+    }
 }
