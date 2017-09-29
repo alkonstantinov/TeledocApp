@@ -16,6 +16,6 @@
         android:layout_width="1dp"
         android:layout_weight="0.20"
         android:layout_height="wrap_content"
-        android:id="@+id/bShowChat"/>
+        android:id="@+id/bShowIssue"/>
 
 </LinearLayout>

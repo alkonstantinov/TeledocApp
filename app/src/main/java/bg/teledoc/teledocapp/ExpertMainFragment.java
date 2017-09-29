@@ -12,6 +12,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import bg.teledoc.teledocapp.Adapters.IssuesByExpertAdapter;
 import bg.teledoc.teledocapp.Adapters.IssuesClosedAdapter;
 import bg.teledoc.teledocapp.Adapters.IssuesNotClosedAdapter;
 import bg.teledoc.teledocapp.Adapters.IssuesTakenAdapter;
@@ -47,7 +48,7 @@ public class ExpertMainFragment extends BaseFragment {
                         JSONObject obj = (JSONObject)jarr.get(i);
                         arr.add(obj);
                     }
-                    IssuesNotClosedAdapter adapter = new IssuesNotClosedAdapter(getContext(), arr);
+                    IssuesByExpertAdapter adapter = new IssuesByExpertAdapter(getContext(), arr);
                     ListView listView = (ListView) v.findViewById(R.id.lvOpenIssues);
                     listView.setAdapter(adapter);
 

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import org.json.JSONException;
@@ -11,6 +12,8 @@ import org.json.JSONObject;
 
 import java.util.List;
 
+import bg.teledoc.teledocapp.IssuePreviewFragment;
+import bg.teledoc.teledocapp.MainActivity;
 import bg.teledoc.teledocapp.R;
 import bg.teledoc.teledocapp.Tools.Tools;
 
@@ -46,7 +49,19 @@ public class IssuesByExpertAdapter extends android.widget.ArrayAdapter<JSONObjec
         }
 
 
-
+        final Button bShowIssue = (Button)convertView.findViewById(R.id.bShowIssue);
+        try {
+            bShowIssue.setTag(jobj.getInt("issueid"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        bShowIssue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int issueId = (int)bShowIssue.getTag();
+                MainActivity.getMain().gotoFragment(IssuePreviewFragment.newInstance(issueId));
+            }
+        });
         return convertView;
     }
 

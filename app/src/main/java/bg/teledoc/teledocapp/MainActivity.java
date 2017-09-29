@@ -24,7 +24,19 @@ import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
 public class MainActivity extends AppCompatActivity {
+    private JSONObject issue;
+
+    public JSONObject getIssue() {
+        return issue;
+    }
+
+    public void setIssue(JSONObject issue) {
+        this.issue = issue;
+    }
+
     private Socket socket;
+
+
     public Socket getSocket() {
         return socket;
     }
@@ -43,13 +55,24 @@ public class MainActivity extends AppCompatActivity {
         this.sessionId = sessionId;
     }
 
+    private static MainActivity main;
+
+    public static MainActivity getMain() {
+        return main;
+    }
+
+    public static void setMain(MainActivity main) {
+        MainActivity.main = main;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        MainActivity.setMain(this);
+        issue = new JSONObject();
         Requests.GetSessionId(this, new ServerAPICallback() {
             @Override
             public void onResult(String result) {
