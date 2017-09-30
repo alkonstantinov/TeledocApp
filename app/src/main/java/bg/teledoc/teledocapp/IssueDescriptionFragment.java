@@ -97,6 +97,8 @@ public class IssueDescriptionFragment extends BaseFragment {
 
         } catch (JSONException ex) {
         }
+
+        this.GetMain().gotoFragment(new IssueSexYearsFragment());
     }
 
 }
