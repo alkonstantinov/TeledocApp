@@ -174,6 +174,7 @@ public class IssueSexYearsFragment extends BaseFragment {
 
     private void Next() {
         Save();
+        this.GetMain().gotoFragment(new IssueSymptomsFragment());
     }
 
 }

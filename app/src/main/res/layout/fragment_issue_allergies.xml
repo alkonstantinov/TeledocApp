@@ -39,18 +39,36 @@
 
         </LinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/Base.TextAppearance.AppCompat.Headline"
-            android:text="@string/description" />
-
-        <EditText
-            android:id="@+id/tbDescription"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="400dp"
-            style="@style/Base.Widget.AppCompat.EditText"
-            />
+            android:layout_height="match_parent">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/Base.TextAppearance.AppCompat.Large"
+                    android:text="@string/issueallergies" />
+
+                <ImageButton
+                    android:id="@+id/bAddOther"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/plus" />
+
+
+                <LinearLayout
+                    android:id="@+id/liOthers"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
     </LinearLayout>
 </FrameLayout>

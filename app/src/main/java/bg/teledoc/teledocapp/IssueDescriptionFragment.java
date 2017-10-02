@@ -59,7 +59,7 @@ public class IssueDescriptionFragment extends BaseFragment {
                 Prev();
             }
         });
-
+        tbDescription.requestFocus();
         return v;
     }
 

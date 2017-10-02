@@ -14,43 +14,42 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-
             <ImageButton
                 android:id="@+id/bPrev"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:layout_weight="0.2"
-                android:src="@drawable/prev" />
-
+                android:layout_height="wrap_content"
+                android:src="@drawable/prev"
+                />
             <TextView
-                android:id="@+id/lError"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="0.6"
-                android:text="@string/entervalue"
-                android:visibility="invisible" />
-
+                android:id="@+id/lError"
+                android:visibility="invisible"
+                />
             <ImageButton
                 android:id="@+id/bNext"
+                android:layout_weight="0.2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.2"
-                android:src="@drawable/next" />
+                android:src="@drawable/next"
+                />
 
         </LinearLayout>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/Base.TextAppearance.AppCompat.Headline"
-            android:text="@string/description" />
+            style="@style/Base.TextAppearance.AppCompat.Large"
+            android:text="@string/since" />
 
-        <EditText
-            android:id="@+id/tbDescription"
-            android:layout_width="match_parent"
-            android:layout_height="400dp"
-            style="@style/Base.Widget.AppCompat.EditText"
-            />
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/rgSince">
+        </RadioGroup>
 
     </LinearLayout>
 </FrameLayout>
