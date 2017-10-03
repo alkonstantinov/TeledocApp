@@ -373,4 +373,38 @@ public class Requests {
         queue.add(postRequest);
     }
 
+
+    public static void ChangePass(final String sessionId, final String pass, Context context, final ServerAPICallback cb) {
+        RequestQueue queue = Volley.newRequestQueue(context);
+        final String result;
+        StringRequest postRequest = new StringRequest(Request.Method.POST, BaseUrl + "changepass",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // response
+                        cb.onResult(response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // error
+                        Log.d("Error.Response", error.getMessage());
+                        cb.onError(error.getMessage());
+                    }
+                }
+        ) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("sessionId", sessionId);
+                params.put("password", pass);
+
+                return params;
+            }
+
+        };
+        queue.add(postRequest);
+    }
+
 }

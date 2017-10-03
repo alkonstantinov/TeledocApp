@@ -11,6 +11,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import bg.teledoc.teledocapp.Adapters.IssuesByExpertAdapter;
 import bg.teledoc.teledocapp.Adapters.IssuesClosedAdapter;
@@ -117,6 +119,14 @@ public class ExpertMainFragment extends BaseFragment {
 
             }
         });
+
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask(){
+            @Override
+            public void run(){
+                GetMain().gotoFragmentFast(new ExpertMainFragment());
+            }
+        }, 5000);
 
         return v;
     }

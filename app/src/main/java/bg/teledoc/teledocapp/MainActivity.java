@@ -1,15 +1,21 @@
 package bg.teledoc.teledocapp;
 
+import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -65,6 +71,22 @@ public class MainActivity extends AppCompatActivity {
         MainActivity.main = main;
     }
 
+    public boolean IsNetworkAvailable(android.content.Context ctx) {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) ctx.getSystemService(ctx.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    public void CheckInternet() {
+        boolean res = this.IsNetworkAvailable(this);
+        if (res)
+            return;
+        gotoFragment(new NoInternetFragment());
+
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         MainActivity.setMain(this);
         issue = new JSONObject();
+        CheckInternet();
         Requests.GetSessionId(this, new ServerAPICallback() {
             @Override
             public void onResult(String result) {
@@ -140,6 +163,12 @@ public class MainActivity extends AppCompatActivity {
         trans.commit();
 
     }
+    public void gotoFragmentFast(Fragment mFragment) {
+        android.support.v4.app.FragmentTransaction trans = getSupportFragmentManager().beginTransaction();
+        trans.replace(R.id.screen_content, mFragment);
+        trans.commit();
+
+    }
 
 
     private void ShowHideLanguageButtons(Menu menu) {
@@ -201,9 +230,34 @@ public class MainActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
         ShowHideLanguageButtons(menu);
+        mainMenu = menu;
 
+        menu.findItem(R.id.miExit).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                System.exit(1);
+                return true;
+            }
+        });
+
+        menu.findItem(R.id.miChangePass).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                gotoFragment(new ChangePasswordFragment());
+                return true;
+            }
+        });
         return true;
     }
 
+    private Menu mainMenu;
 
+
+    public Menu getMainMenu() {
+        return mainMenu;
+    }
+
+    public void setMainMenu(Menu mainMenu) {
+        this.mainMenu = mainMenu;
+    }
 }

@@ -15,6 +15,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import bg.teledoc.teledocapp.Adapters.IssuesClosedAdapter;
 import bg.teledoc.teledocapp.Adapters.IssuesNotClosedAdapter;
@@ -23,6 +25,8 @@ import bg.teledoc.teledocapp.Requests.Requests;
 
 
 public class PatientMainFragment extends BaseFragment {
+
+    Timer timer;
 
     public PatientMainFragment() {
         // Required empty public constructor
@@ -46,8 +50,8 @@ public class PatientMainFragment extends BaseFragment {
                     JSONArray jarr = new JSONArray(result);
                     ArrayList<JSONObject> arr = new ArrayList<JSONObject>();
 
-                    for (int i=0;i<jarr.length();i++) {
-                        JSONObject obj = (JSONObject)jarr.get(i);
+                    for (int i = 0; i < jarr.length(); i++) {
+                        JSONObject obj = (JSONObject) jarr.get(i);
                         arr.add(obj);
                     }
                     IssuesNotClosedAdapter adapter = new IssuesNotClosedAdapter(getContext(), arr);
@@ -72,8 +76,8 @@ public class PatientMainFragment extends BaseFragment {
                     JSONArray jarr = new JSONArray(result);
                     ArrayList<JSONObject> arr = new ArrayList<JSONObject>();
 
-                    for (int i=0;i<jarr.length();i++) {
-                        JSONObject obj = (JSONObject)jarr.get(i);
+                    for (int i = 0; i < jarr.length(); i++) {
+                        JSONObject obj = (JSONObject) jarr.get(i);
                         arr.add(obj);
                     }
                     IssuesClosedAdapter adapter = new IssuesClosedAdapter(getContext(), arr);
@@ -91,13 +95,25 @@ public class PatientMainFragment extends BaseFragment {
             }
         });
 
-        Button bNewIssue = (Button)v.findViewById(R.id.bNewIssue);
+        Button bNewIssue = (Button) v.findViewById(R.id.bNewIssue);
         bNewIssue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 GetMain().gotoFragment(new IssueTargetFragment());
             }
         });
+
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                MainActivity main = GetMain();
+                if (main == null)
+                    return;
+                main.gotoFragmentFast(new PatientMainFragment());
+            }
+        }, 5000);
+
         return v;
     }
 

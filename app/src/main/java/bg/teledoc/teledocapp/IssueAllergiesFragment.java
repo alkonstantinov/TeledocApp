@@ -139,7 +139,7 @@ public class IssueAllergiesFragment extends BaseFragment {
 //        } catch (JSONException ex) {
 //        }
 
-        //this.GetMain().gotoFragment(new IssueSinceFragment());
+        this.GetMain().gotoFragment(new IssueMedicinesFragment());
     }
 
     private void AddOther(String text) {

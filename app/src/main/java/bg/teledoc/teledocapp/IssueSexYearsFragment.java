@@ -13,11 +13,20 @@ import android.widget.Spinner;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Period;
 import java.time.Year;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.TooManyListenersException;
+import java.util.concurrent.TimeUnit;
 
 
 public class IssueSexYearsFragment extends BaseFragment {
@@ -145,7 +154,31 @@ public class IssueSexYearsFragment extends BaseFragment {
         return v;
     }
 
-    private void Save() {
+
+    private boolean Save() {
+        boolean result = true;
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-M-dd");
+        String str = ddlYear.getSelectedItem().toString() + "-" + ddlMonth.getSelectedItemPosition() + "-01";
+        int years = 0;
+        try {
+            Date d1 = df.parse(str);
+            Calendar c1 = new GregorianCalendar();
+            Calendar c2 = new GregorianCalendar();
+            c1.setTime(d1);
+            c2.setTime(new Date());
+            years = c2.get(Calendar.YEAR) - c1.get(Calendar.YEAR);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        if (years < 18) {
+            getView().findViewById(R.id.lError).setVisibility(View.VISIBLE);
+            result = false;
+        }
+
+        if (!result)
+            return false;
+
         try {
             JSONObject issue = GetMain().getIssue();
             if (rbFemale.isChecked())
@@ -154,27 +187,27 @@ public class IssueSexYearsFragment extends BaseFragment {
                 issue.put("sexid", "m");
             if (rbOtherSex.isChecked())
                 issue.put("sexid", "b");
-            issue.put("birthmonth", ddlMonth.getSelectedItemPosition()+1);
+            issue.put("birthmonth", ddlMonth.getSelectedItemPosition() + 1);
             issue.put("birthyear", Integer.parseInt(ddlYear.getSelectedItem().toString()));
-
 
 
         } catch (JSONException ex) {
         }
 
+        return true;
     }
 
     private void Prev() {
-        Save();
+        if (Save())
 
 
-        this.GetMain().gotoFragment(new IssueDescriptionFragment());
+            this.GetMain().gotoFragment(new IssueDescriptionFragment());
     }
 
 
     private void Next() {
-        Save();
-        this.GetMain().gotoFragment(new IssueSymptomsFragment());
+        if (Save())
+            this.GetMain().gotoFragment(new IssueSymptomsFragment());
     }
 
 }
