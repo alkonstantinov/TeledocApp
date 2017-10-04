@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -14,6 +15,8 @@ import org.json.JSONObject;
 
 import java.util.List;
 
+import bg.teledoc.teledocapp.IssuePreviewFragment;
+import bg.teledoc.teledocapp.MainActivity;
 import bg.teledoc.teledocapp.R;
 import bg.teledoc.teledocapp.Tools.Tools;
 
@@ -54,6 +57,22 @@ public class IssuesNotClosedAdapter extends android.widget.ArrayAdapter<JSONObje
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        final ImageButton bShowChat = (ImageButton)convertView.findViewById(R.id.bShowChat);
+        try {
+            bShowChat.setTag(jobj.getInt("issueid"));
+            if(jobj.getInt("answertypeid")!=1)
+                bShowChat.setVisibility(View.INVISIBLE);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        bShowChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int issueId = (int)bShowChat.getTag();
+                MainActivity.getMain().gotoFragment(IssuePreviewFragment.newInstance(issueId));
+            }
+        });
 
 
         return convertView;

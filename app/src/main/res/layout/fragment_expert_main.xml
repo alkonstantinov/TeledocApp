@@ -12,10 +12,12 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            style="@style/Base.DialogWindowTitle.AppCompat"
             android:text="@string/welcome"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            style="@style/Base.TextAppearance.AppCompat.Large"
             android:text="@string/openissues"/>
 
         <ListView
@@ -27,6 +29,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            style="@style/Base.TextAppearance.AppCompat.Large"
             android:text="@string/takenissues"/>
 
         <ListView
@@ -39,6 +42,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            style="@style/Base.TextAppearance.AppCompat.Large"
             android:text="@string/closedissues"/>
         <ListView
             android:layout_width="match_parent"

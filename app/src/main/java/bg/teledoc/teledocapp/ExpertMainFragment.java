@@ -124,7 +124,10 @@ public class ExpertMainFragment extends BaseFragment {
         timer.schedule(new TimerTask(){
             @Override
             public void run(){
-                GetMain().gotoFragmentFast(new ExpertMainFragment());
+                MainActivity main = GetMain();
+                if (main == null)
+                    return;
+                main.gotoFragmentFast(new ExpertMainFragment());
             }
         }, 5000);
 

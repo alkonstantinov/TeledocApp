@@ -7,15 +7,14 @@
         android:layout_weight="0.30"
         android:layout_height="wrap_content"
         android:id="@+id/tvDate"/>
+
     <TextView
         android:layout_width="1dp"
-        android:layout_weight="0.50"
+        android:layout_weight="0.70"
         android:layout_height="wrap_content"
-        android:id="@+id/tvDescription"/>
-    <Button
-        android:layout_width="1dp"
-        android:layout_weight="0.20"
-        android:layout_height="wrap_content"
-        android:id="@+id/bShowIssue"/>
+        android:autoLink="all"
+        android:linksClickable="true"
+        android:id="@+id/tvDescription"
+        android:textColor="@color/lgreen"/>
 
 </LinearLayout>

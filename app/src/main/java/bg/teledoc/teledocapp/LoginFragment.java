@@ -117,7 +117,7 @@ public class LoginFragment extends BaseFragment {
                 );
             }
         });
-
+        ((EditText) v.findViewById(R.id.tbUserName)).requestFocus();
         return v;
     }
 

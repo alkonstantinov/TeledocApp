@@ -83,9 +83,9 @@ public class IssueTargetFragment extends BaseFragment {
             else
                 issue.put("whoid", 2);
             if (rbDoctor.isChecked())
-                issue.put("reqexpertlevelid", 1);
-            else
                 issue.put("reqexpertlevelid", 2);
+            else
+                issue.put("reqexpertlevelid", 3);
 
             Requests.IssueLastGet(GetMain().getSessionId(), issue.getInt("whoid"), getContext(), new ServerAPICallback() {
                 @Override

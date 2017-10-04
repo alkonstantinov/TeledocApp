@@ -70,7 +70,6 @@ public class IssueAnswerTypeFragment extends BaseFragment {
         });
 
 
-
         try {
             JSONObject issue = GetMain().getIssue();
             if (issue.has("answertypeid")) {
@@ -132,6 +131,45 @@ public class IssueAnswerTypeFragment extends BaseFragment {
             ((TextView) getView().findViewById(R.id.lIncorrectValue)).setVisibility(View.VISIBLE);
 
         }
+        if (result) {
+            if (rbChat.isChecked()) {
+                try {
+                    GetMain().getIssue().put("answertypeid", 1);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (rbEmail.isChecked()) {
+                try {
+                    GetMain().getIssue().put("answertypeid", 2);
+                    GetMain().getIssue().put("additionalinfo", tbEmail.getText().toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (rbPhone.isChecked()) {
+                try {
+                    GetMain().getIssue().put("answertypeid", 3);
+                    GetMain().getIssue().put("additionalinfo", tbPhone.getText().toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+
+            Requests.SetIssue(GetMain().getSessionId(), GetMain().getIssue().toString(), getContext(), new ServerAPICallback() {
+                @Override
+                public void onResult(String result) {
+
+                }
+
+                @Override
+                public void onError(Object error) {
+
+                }
+            });
+        }
+
 
         return result;
     }

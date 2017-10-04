@@ -25,6 +25,7 @@ public class IssuePreviewFragment extends BaseFragment {
     // TODO: Rename and change types of parameters
     private int mIssueId;
 
+    private int answertypeid;
 
     public IssuePreviewFragment() {
         // Required empty public constructor
@@ -64,6 +65,35 @@ public class IssuePreviewFragment extends BaseFragment {
             }
         });
 
+        v.findViewById(R.id.bBack).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                GetMain().gotoFragment(new ExpertMainFragment());
+            }
+        });
+
+        v.findViewById(R.id.bTake).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Requests.TakeIssue(GetMain().getSessionId(), mIssueId, getContext(), new ServerAPICallback() {
+                    @Override
+                    public void onResult(String result) {
+
+                        if (answertypeid==1)
+                            GetMain().gotoFragment(new ExpertMainFragment());//chat
+                        else
+                            GetMain().gotoFragment(new ExpertMainFragment());
+
+                    }
+
+                    @Override
+                    public void onError(Object error) {
+
+                    }
+                });
+
+            }
+        });
         return v;
     }
 
@@ -71,6 +101,10 @@ public class IssuePreviewFragment extends BaseFragment {
 
         try {
             JSONObject issue = new JSONObject(json);
+            this.answertypeid = issue.getInt("answertypeid");
+            if (issue.getInt("issuestatusid")>1)
+                getView().findViewById(R.id.bTake).setVisibility(View.INVISIBLE);
+
             ((TextView) this.getView().findViewById(R.id.lAnswerType)).setText(issue.getString("answertypename") + (issue.get("additionalinfo") != null ? " " + issue.getString("additionalinfo") : ""));
             ((TextView) this.getView().findViewById(R.id.lWhoName)).setText(issue.getString("whoname"));
             ((TextView) this.getView().findViewById(R.id.lGenderName)).setText(issue.getString("gendername"));
@@ -78,6 +112,7 @@ public class IssuePreviewFragment extends BaseFragment {
             ((TextView) this.getView().findViewById(R.id.lDescription)).setText(issue.getString("description"));
             ((TextView) this.getView().findViewById(R.id.lSince)).setText(issue.getString("sincename"));
             JSONArray arr = issue.getJSONArray("symptoms");
+
             StringBuilder sbSymptoms = new StringBuilder();
             for (int i = 0; i < arr.length(); i++)
                 sbSymptoms.append(((JSONObject) arr.get(i)).getString("symptomname") + "\r\n");

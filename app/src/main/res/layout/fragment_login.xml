@@ -17,7 +17,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/Base.DialogWindowTitle.AppCompat"
-            android:text="@string/login" />
+            android:text="@string/login"
+            />
         <EditText
             android:layout_width="500px"
             android:layout_height="wrap_content"

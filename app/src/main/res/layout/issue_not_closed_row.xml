@@ -17,10 +17,11 @@
         android:layout_weight="0.20"
         android:layout_height="wrap_content"
         android:id="@+id/tvStatus"/>
-    <Button
+    <ImageButton
         android:layout_width="1dp"
         android:layout_weight="0.20"
         android:layout_height="wrap_content"
+        android:src="@drawable/chat"
         android:id="@+id/bShowChat"/>
 
 </LinearLayout>

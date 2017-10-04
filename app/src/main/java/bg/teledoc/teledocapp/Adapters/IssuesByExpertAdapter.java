@@ -41,27 +41,22 @@ public class IssuesByExpertAdapter extends android.widget.ArrayAdapter<JSONObjec
             e.printStackTrace();
         }
 
-        TextView tvDescription = (TextView)convertView.findViewById(R.id.tvDescription);
+        final TextView tvDescription = (TextView)convertView.findViewById(R.id.tvDescription);
         try {
             tvDescription.setText(jobj.getString("description"));
+            tvDescription.setTag(jobj.getInt("issueid"));
+            tvDescription.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int issueId = (int)tvDescription.getTag();
+                    MainActivity.getMain().gotoFragment(IssuePreviewFragment.newInstance(issueId));
+                }
+            });
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
 
-        final Button bShowIssue = (Button)convertView.findViewById(R.id.bShowIssue);
-        try {
-            bShowIssue.setTag(jobj.getInt("issueid"));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        bShowIssue.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int issueId = (int)bShowIssue.getTag();
-                MainActivity.getMain().gotoFragment(IssuePreviewFragment.newInstance(issueId));
-            }
-        });
         return convertView;
     }
 

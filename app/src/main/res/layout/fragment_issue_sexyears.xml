@@ -27,6 +27,7 @@
                 android:layout_weight="0.6"
                 android:id="@+id/lError"
                 android:text="@string/mustbe18"
+                style="@style/TextAppearance.Design.Error"
                 android:visibility="invisible"
                 />
             <ImageButton
