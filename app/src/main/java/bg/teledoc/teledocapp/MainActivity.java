@@ -160,12 +160,14 @@ public class MainActivity extends AppCompatActivity {
         android.support.v4.app.FragmentTransaction trans = getSupportFragmentManager().beginTransaction();
         trans.setCustomAnimations(R.anim.slide_out_right, R.anim.slide_out_left);
         trans.replace(R.id.screen_content, mFragment);
+        setCurrentFragment(mFragment);
         trans.commit();
 
     }
     public void gotoFragmentFast(Fragment mFragment) {
         android.support.v4.app.FragmentTransaction trans = getSupportFragmentManager().beginTransaction();
         trans.replace(R.id.screen_content, mFragment);
+        setCurrentFragment(mFragment);
         trans.commit();
 
     }
@@ -259,5 +261,15 @@ public class MainActivity extends AppCompatActivity {
 
     public void setMainMenu(Menu mainMenu) {
         this.mainMenu = mainMenu;
+    }
+
+    private android.support.v4.app.Fragment currentFragment;
+
+    public android.support.v4.app.Fragment getCurrentFragment() {
+        return currentFragment;
+    }
+
+    public void setCurrentFragment(android.support.v4.app.Fragment currentFragment) {
+        this.currentFragment = currentFragment;
     }
 }
