@@ -67,6 +67,9 @@ public class LoginFragment extends BaseFragment {
                                         Toast.makeText(getContext(),R.string.invalidusername,Toast.LENGTH_LONG).show();
                                     else
                                     {
+                                        GetMain().setUserId(res.getInt("UserId"));
+                                        GetMain().setUserName(res.getString("Name"));
+
                                         GetMain().getSocket().emit("iam",res.get("UserId"));
                                         switch(Integer.parseInt(res.get("LevelId").toString()))
                                         {

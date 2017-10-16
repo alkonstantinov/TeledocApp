@@ -1,0 +1,108 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="bg.teledoc.teledocapp.ChatFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ScrollView
+            android:id="@+id/svChat"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/llChat">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="1dp"
+                        android:layout_weight="0.5"
+                        android:layout_height="wrap_content"
+
+                        android:text=""
+
+                        />
+
+                    <TextView
+                        android:layout_width="1dp"
+                        android:layout_weight="0.5"
+                        android:layout_height="wrap_content"
+                        android:text="111 111 111 111 111 1111 111 1111 11111 1 1  1 1 1 1  1 1111 111 11"
+                        />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="1dp"
+                        android:layout_weight="0.5"
+                        android:layout_height="wrap_content"
+                        android:text="111 111 111 111 111 1111 111 1111 11111 1 1  1 1 1 1  1 1111 111 11"
+                        />
+                    <TextView
+                        android:layout_width="1dp"
+                        android:layout_weight="0.5"
+                        android:layout_height="wrap_content"
+
+                        android:text=""
+
+                        />
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+        </ScrollView>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal">
+
+
+            <EditText
+                android:id="@+id/tbMsg"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:text="" />
+
+            <ImageButton
+                android:id="@+id/bSend"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/text" />
+
+            <ImageButton
+                android:id="@+id/bImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/image" />
+
+            <ImageButton
+                android:id="@+id/bEndChat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/close" />
+
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</FrameLayout>

@@ -15,6 +15,7 @@ import org.json.JSONObject;
 
 import java.util.List;
 
+import bg.teledoc.teledocapp.ChatFragment;
 import bg.teledoc.teledocapp.IssuePreviewFragment;
 import bg.teledoc.teledocapp.MainActivity;
 import bg.teledoc.teledocapp.R;
@@ -70,9 +71,10 @@ public class IssuesNotClosedAdapter extends android.widget.ArrayAdapter<JSONObje
             @Override
             public void onClick(View view) {
                 int issueId = (int)bShowChat.getTag();
-                MainActivity.getMain().gotoFragment(IssuePreviewFragment.newInstance(issueId));
+                MainActivity.getMain().gotoFragment(ChatFragment.newInstance(issueId));
             }
         });
+
 
 
         return convertView;

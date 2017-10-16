@@ -1,0 +1,299 @@
+package bg.teledoc.teledocapp;
+
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+import bg.teledoc.teledocapp.Callbacks.ServerAPICallback;
+import bg.teledoc.teledocapp.Requests.Requests;
+
+
+public class ChatFragment extends BaseFragment {
+
+
+    public int getmIssueId() {
+        return mIssueId;
+    }
+
+    public void setmIssueId(int mIssueId) {
+        this.mIssueId = mIssueId;
+    }
+
+    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+
+        private ImageView bmImage;
+
+        public DownloadImageTask(ImageView bmImage) {
+            this.bmImage = bmImage;
+        }
+
+        protected void onPreExecute() {
+
+
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap mIcon11 = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                mIcon11 = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error", "image download error");
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            return mIcon11;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            //set image of your imageview
+            bmImage.setImageBitmap(result);
+            //close
+
+        }
+    }
+
+    private static final String IssueId_PARAM = "IssueId";
+
+    private int mIssueId;
+
+    private ScrollView svChat;
+
+    private LinearLayout llChat;
+
+    private ImageButton bSend;
+
+    private TextView tbMsg;
+
+    public ChatFragment() {
+        // Required empty public constructor
+    }
+
+
+    public static ChatFragment newInstance(int issueId) {
+        ChatFragment fragment = new ChatFragment();
+        Bundle args = new Bundle();
+        args.putInt(IssueId_PARAM, issueId);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            setmIssueId(getArguments().getInt(IssueId_PARAM));
+            GetMain().getSocket().emit("room", "issue_" + getmIssueId());
+        }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View v = inflater.inflate(R.layout.fragment_chat, container, false);
+
+        llChat = (LinearLayout) v.findViewById(R.id.llChat);
+        svChat = (ScrollView) v.findViewById(R.id.svChat);
+        tbMsg = (EditText) v.findViewById(R.id.tbMsg);
+        bSend = (ImageButton) v.findViewById(R.id.bSend);
+        bSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (tbMsg.getText().equals(""))
+                    return;
+
+                try {
+                    JSONObject jo = new JSONObject("{}");
+                    jo.put("message", tbMsg.getText());
+                    jo.put("room", "issue_" + getmIssueId());
+                    jo.put("userid", GetMain().getUserId());
+                    jo.put("name", GetMain().getUserName());
+                    jo.put("issueId", getmIssueId());
+                    GetMain().getSocket().emit("send", jo);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                tbMsg.setText("");
+            }
+        });
+        GetChat();
+        return v;
+    }
+
+
+    private void GetChat() {
+        llChat.removeAllViews();
+        Requests.GetChat(GetMain().getSessionId(), "" + this.getmIssueId(), getContext(), new ServerAPICallback() {
+            @Override
+            public void onResult(String result) {
+                try {
+                    JSONArray ja = new JSONArray(result);
+                    for (int i = 0; i < ja.length(); i++) {
+                        JSONObject jo = (JSONObject) ja.get(i);
+                        AddMessage(jo);
+                    }
+                    svChat.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            // This method works but animates the scrolling
+                            // which looks weird on first load
+                            // scroll_view.fullScroll(View.FOCUS_DOWN);
+
+                            // This method works even better because there are no animations.
+                            svChat.scrollTo(0, svChat.getBottom());
+                        }
+                    });
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(Object error) {
+
+            }
+        });
+
+    }
+
+
+    public Drawable drawableFromUrl(String url) throws IOException {
+        Bitmap x;
+
+        HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+        connection.connect();
+        InputStream input = connection.getInputStream();
+
+        x = BitmapFactory.decodeStream(input);
+        return new BitmapDrawable(x);
+    }
+
+    public void showImage(int chatId) {
+        Dialog builder = new Dialog(getContext());
+        builder.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        builder.getWindow().setBackgroundDrawable(
+                new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                //nothing;
+            }
+        });
+
+        ImageView iv = new ImageView(getContext());
+        //imageView.setImageURI(imageUri);
+        new DownloadImageTask(iv).execute("http://10.0.2.2/getchatimage?ChatId=" + chatId);
+
+
+        builder.addContentView(iv, new RelativeLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT));
+        builder.show();
+    }
+
+
+    public void AddMessage(final JSONObject data) {
+
+        LinearLayout ll = new LinearLayout(getContext());
+        try {
+            if (!data.has("hasimg") || !data.getBoolean("hasimg")) {
+
+                TextView tvEmpty = new TextView(getContext());
+                TextView tvText = new TextView(getContext());
+                LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(1, LinearLayout.LayoutParams.WRAP_CONTENT);
+                p.weight = (float) 0.5;
+
+                tvEmpty.setLayoutParams(p);
+                tvText.setLayoutParams(p);
+
+                tvText.setText(data.getString("ontime") + "\n" + data.getString("name") + "\n"
+                        + data.getString("message"));
+
+                if (data.getInt("userid") == GetMain().getUserId()) {
+                    ll.addView(tvEmpty);
+                    ll.addView(tvText);
+                } else {
+                    ll.addView(tvText);
+                    ll.addView(tvEmpty);
+                }
+
+            } else {
+
+
+                TextView tvEmpty = new TextView(getContext());
+                final ImageView iv = new ImageView(getContext());
+                LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(1, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+                p.weight = (float) 0.5;
+
+                tvEmpty.setLayoutParams(p);
+                iv.setLayoutParams(p);
+
+
+//                Glide.with(this)
+//                        .load()
+//                        .into(iv);
+
+                new DownloadImageTask(iv).execute("http://10.0.2.2/getchatimage?ChatId=" + data.getString("chatid"));
+
+
+                iv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        try {
+                            showImage(data.getInt("chatid"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
+
+                if (data.getInt("userid") == GetMain().getUserId()) {
+                    ll.addView(tvEmpty);
+                    ll.addView(iv);
+                } else {
+                    ll.addView(iv);
+                    ll.addView(tvEmpty);
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        llChat.addView(ll);
+
+
+    }
+
+
+}

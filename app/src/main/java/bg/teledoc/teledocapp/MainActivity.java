@@ -16,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -60,6 +61,29 @@ public class MainActivity extends AppCompatActivity {
     public void setSessionId(String sessionId) {
         this.sessionId = sessionId;
     }
+
+
+    private Integer userId;
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    private String userName;
+
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
 
     private static MainActivity main;
 
@@ -127,13 +151,21 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void call(Object... args) {
-                int q = 3;
+
             }
 
         }).on("event", new Emitter.Listener() {
 
             @Override
             public void call(Object... args) {
+            }
+
+        }).on("message", new Emitter.Listener() {
+
+            @Override
+            public void call(Object... args) {
+
+                ProcessMessage((JSONObject) args[0]);
             }
 
         }).on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
@@ -164,6 +196,7 @@ public class MainActivity extends AppCompatActivity {
         trans.commit();
 
     }
+
     public void gotoFragmentFast(Fragment mFragment) {
         android.support.v4.app.FragmentTransaction trans = getSupportFragmentManager().beginTransaction();
         trans.replace(R.id.screen_content, mFragment);
@@ -271,5 +304,33 @@ public class MainActivity extends AppCompatActivity {
 
     public void setCurrentFragment(android.support.v4.app.Fragment currentFragment) {
         this.currentFragment = currentFragment;
+    }
+
+
+    private void ProcessMessage(final JSONObject jo) {
+        try {
+            if ((this.currentFragment instanceof ChatFragment)
+                    &&
+                    (
+                            ((ChatFragment) this.currentFragment).getmIssueId() == jo.getInt("issueId")
+                    ))
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ((ChatFragment) currentFragment).AddMessage(jo);
+                    }
+                });
+
+            else
+                Toast.makeText(getBaseContext(), getResources().getString(R.string.NewMessage), Toast.LENGTH_LONG).show();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        {
+
+
+        }
+
     }
 }
