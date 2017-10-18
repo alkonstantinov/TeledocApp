@@ -31,6 +31,7 @@ public class Requests {
     public static void GetSessionId(Context context, final ServerAPICallback cb) {
         RequestQueue queue = Volley.newRequestQueue(context);
         final String result;
+
         StringRequest getRequest = new StringRequest(Request.Method.GET, BaseUrl + "getsessionid",
                 new Response.Listener<String>() {
                     @Override

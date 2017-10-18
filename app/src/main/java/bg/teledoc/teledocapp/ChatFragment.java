@@ -2,6 +2,7 @@ package bg.teledoc.teledocapp;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -9,6 +10,8 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,17 +29,24 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 
 import bg.teledoc.teledocapp.Callbacks.ServerAPICallback;
 import bg.teledoc.teledocapp.Requests.Requests;
+import bg.teledoc.teledocapp.Requests.uploadFileToServerTask;
 
 
 public class ChatFragment extends BaseFragment {
 
+
+    private static final int REQUEST_CAMERA = 1;
 
     public int getmIssueId() {
         return mIssueId;
@@ -90,6 +100,7 @@ public class ChatFragment extends BaseFragment {
     private LinearLayout llChat;
 
     private ImageButton bSend;
+    private ImageButton bImage;
 
     private TextView tbMsg;
 
@@ -145,9 +156,48 @@ public class ChatFragment extends BaseFragment {
                 tbMsg.setText("");
             }
         });
+
+        bImage = (ImageButton)v.findViewById(R.id.bImage);
+        bImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+//                startActivityForResult(intent, 0);
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(intent, REQUEST_CAMERA);
+            }
+        });
+
+
+
+
         GetChat();
         return v;
     }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode==REQUEST_CAMERA)
+        {
+            Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+            File destination = new File(Environment.getExternalStorageDirectory(),"temp.jpg");
+            FileOutputStream fo;
+            try {
+                fo = new FileOutputStream(destination);
+                fo.write(bytes.toByteArray());
+                fo.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            new uploadFileToServerTask().execute(destination.getAbsolutePath());
+        }
+    }
+
 
 
     private void GetChat() {
