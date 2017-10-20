@@ -25,6 +25,8 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -59,9 +61,11 @@ public class ChatFragment extends BaseFragment {
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
 
         private ImageView bmImage;
+        private Boolean showFullSize;
 
-        public DownloadImageTask(ImageView bmImage) {
+        public DownloadImageTask(ImageView bmImage, Boolean showFullSize) {
             this.bmImage = bmImage;
+            this.showFullSize = showFullSize;
         }
 
         protected void onPreExecute() {
@@ -86,6 +90,8 @@ public class ChatFragment extends BaseFragment {
         protected void onPostExecute(Bitmap result) {
             //set image of your imageview
             bmImage.setImageBitmap(result);
+            if (showFullSize)
+                bmImage.setAdjustViewBounds(true);
             //close
 
         }
@@ -101,6 +107,7 @@ public class ChatFragment extends BaseFragment {
 
     private ImageButton bSend;
     private ImageButton bImage;
+    private ImageButton bEndChat;
 
     private TextView tbMsg;
 
@@ -139,7 +146,7 @@ public class ChatFragment extends BaseFragment {
         bSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (tbMsg.getText().equals(""))
+                if (tbMsg.getText().toString().equals(""))
                     return;
 
                 try {
@@ -157,7 +164,7 @@ public class ChatFragment extends BaseFragment {
             }
         });
 
-        bImage = (ImageButton)v.findViewById(R.id.bImage);
+        bImage = (ImageButton) v.findViewById(R.id.bImage);
         bImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -168,8 +175,25 @@ public class ChatFragment extends BaseFragment {
             }
         });
 
+        bEndChat = (ImageButton)v.findViewById(R.id.bEndChat);
+        bEndChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                JSONObject jo = new JSONObject();
+                try {
+                    jo.put("room", "issue_"+mIssueId);
+                    jo.put("issueId", mIssueId);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
-
+                GetMain().getSocket().emit("endchat", jo);
+                if (GetMain().getLevelId()==4)
+                GetMain().gotoFragment(new PatientMainFragment());
+                else
+                    GetMain().gotoFragment(new ExpertMainFragment());
+            }
+        });
 
         GetChat();
         return v;
@@ -179,25 +203,24 @@ public class ChatFragment extends BaseFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode==REQUEST_CAMERA)
-        {
+        if (requestCode == REQUEST_CAMERA) {
             Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
             thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-            File destination = new File(Environment.getExternalStorageDirectory(),"temp.jpg");
-            FileOutputStream fo;
-            try {
-                fo = new FileOutputStream(destination);
-                fo.write(bytes.toByteArray());
-                fo.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+//            File destination = new File(Environment.getExternalStorageDirectory(), "temp.jpg");
+//            FileOutputStream fo;
+//            try {
+//                fo = new FileOutputStream(destination);
+//                fo.write(bytes.toByteArray());
+//                fo.flush();
+//                fo.close();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
 
-            new uploadFileToServerTask().execute(destination.getAbsolutePath());
+            new uploadFileToServerTask(bytes.toByteArray()).execute(mIssueId + "");
         }
     }
-
 
 
     private void GetChat() {
@@ -261,7 +284,15 @@ public class ChatFragment extends BaseFragment {
 
         ImageView iv = new ImageView(getContext());
         //imageView.setImageURI(imageUri);
-        new DownloadImageTask(iv).execute("http://10.0.2.2/getchatimage?ChatId=" + chatId);
+        LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(1, LinearLayout.LayoutParams.WRAP_CONTENT);
+        p.weight = 1;
+
+        iv.setLayoutParams(p);
+
+        Glide.with(this).load("http://18.194.18.118/getchatimage?ChatId=" + chatId).into(iv);
+        //Glide.with(this).load("http://10.0.2.2/getchatimage?ChatId=" + chatId).into(iv);
+
+        //new DownloadImageTask(iv, true).execute("http://10.0.2.2/getchatimage?ChatId=" + chatId);
 
 
         builder.addContentView(iv, new RelativeLayout.LayoutParams(
@@ -274,6 +305,8 @@ public class ChatFragment extends BaseFragment {
     public void AddMessage(final JSONObject data) {
 
         LinearLayout ll = new LinearLayout(getContext());
+        ll.setOrientation(LinearLayout.HORIZONTAL);
+        ll.setDividerPadding(5);
         try {
             if (!data.has("hasimg") || !data.getBoolean("hasimg")) {
 
@@ -282,12 +315,15 @@ public class ChatFragment extends BaseFragment {
                 LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(1, LinearLayout.LayoutParams.WRAP_CONTENT);
                 p.weight = (float) 0.5;
 
+
                 tvEmpty.setLayoutParams(p);
                 tvText.setLayoutParams(p);
 
-                tvText.setText(data.getString("ontime") + "\n" + data.getString("name") + "\n"
-                        + data.getString("message"));
-
+                if (data.has("message"))
+                    tvText.setText(data.getString("ontime") + "\n" + data.getString("name") + "\n"
+                            + data.getString("message"));
+                else
+                    tvText.setText(data.getString("ontime") + "\n" + data.getString("name"));
                 if (data.getInt("userid") == GetMain().getUserId()) {
                     ll.addView(tvEmpty);
                     ll.addView(tvText);
@@ -297,25 +333,25 @@ public class ChatFragment extends BaseFragment {
                 }
 
             } else {
+                data.put("hasimg", false);
+                AddMessage(data);
 
 
                 TextView tvEmpty = new TextView(getContext());
                 final ImageView iv = new ImageView(getContext());
-                LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(1, LinearLayout.LayoutParams.WRAP_CONTENT);
 
+                LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(1, LinearLayout.LayoutParams.WRAP_CONTENT);
                 p.weight = (float) 0.5;
 
                 tvEmpty.setLayoutParams(p);
                 iv.setLayoutParams(p);
 
 
-//                Glide.with(this)
-//                        .load()
-//                        .into(iv);
-
-                new DownloadImageTask(iv).execute("http://10.0.2.2/getchatimage?ChatId=" + data.getString("chatid"));
+                //new DownloadImageTask(iv, false).execute("http://10.0.2.2/getchatimage?ChatId=" + data.getString("chatid"));
 
 
+                //Glide.with(this).load("http://10.0.2.2/getchatimage?ChatId=" + data.getString("chatid")).into(iv);
+                Glide.with(this).load("http://18.194.18.118/getchatimage?ChatId=" + data.getString("chatid")).into(iv);
                 iv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -335,6 +371,8 @@ public class ChatFragment extends BaseFragment {
                     ll.addView(iv);
                     ll.addView(tvEmpty);
                 }
+
+
             }
         } catch (JSONException e) {
             e.printStackTrace();

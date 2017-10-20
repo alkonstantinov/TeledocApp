@@ -25,8 +25,8 @@ import bg.teledoc.teledocapp.Callbacks.ServerAPICallback;
  */
 
 public class Requests {
-    //private static String BaseUrl = "http://18.194.18.118/";
-    private static String BaseUrl = "http://10.0.2.2/";
+    private static String BaseUrl = "http://18.194.18.118/";
+    //private static String BaseUrl = "http://10.0.2.2/";
 
     public static void GetSessionId(Context context, final ServerAPICallback cb) {
         RequestQueue queue = Volley.newRequestQueue(context);

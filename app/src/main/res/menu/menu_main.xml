@@ -15,11 +15,13 @@
     <item
         android:id="@+id/miStart"
         android:title="@string/Start"
+        android:visible="false"
         app:showAsAction="collapseActionView"
         />
     <item
         android:id="@+id/miChangePass"
         android:title="@string/password"
+        android:visible="false"
         app:showAsAction="collapseActionView"
         />
     <item

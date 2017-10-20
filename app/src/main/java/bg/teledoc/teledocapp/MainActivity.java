@@ -88,6 +88,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    private Integer levelId;
+
+    public Integer getLevelId() {
+        return levelId;
+    }
+
+    public void setLevelId(Integer levelId) {
+        this.levelId = levelId;
+    }
+
     private Integer userId;
 
     public Integer getUserId() {
@@ -97,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
     public void setUserId(Integer userId) {
         this.userId = userId;
     }
+
 
     private String userName;
 
@@ -166,7 +177,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         try {
-            setSocket(IO.socket("http://10.0.2.2"));
+            setSocket(IO.socket("http://18.194.18.118"));
+            //setSocket(IO.socket("http://10.0.2.2"));
 
         } catch (URISyntaxException e) {
             e.printStackTrace();
@@ -187,6 +199,14 @@ public class MainActivity extends AppCompatActivity {
             }
 
         }).on("message", new Emitter.Listener() {
+
+            @Override
+            public void call(Object... args) {
+
+                ProcessMessage((JSONObject) args[0]);
+            }
+
+        }).on("messageimage", new Emitter.Listener() {
 
             @Override
             public void call(Object... args) {
@@ -357,7 +377,6 @@ public class MainActivity extends AppCompatActivity {
 
 
         }
-
 
 
     }

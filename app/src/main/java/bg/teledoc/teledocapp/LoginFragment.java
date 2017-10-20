@@ -25,7 +25,7 @@ import bg.teledoc.teledocapp.Requests.Requests;
 
 public class LoginFragment extends BaseFragment {
 
-
+    Menu menu;
     public LoginFragment() {
         // Required empty public constructor
     }
@@ -37,16 +37,15 @@ public class LoginFragment extends BaseFragment {
 
     }
 
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
         final View v = inflater.inflate(R.layout.fragment_login, container, false);
-        final Menu menu = GetMain().getMainMenu();
-        menu.findItem(R.id.miStart).setVisible(false);
-        //menu.findItem(R.id.miExit).setVisible(false);
-        menu.findItem(R.id.miChangePass).setVisible(false);
+
         Button bLogin = (Button) v.findViewById(R.id.bLogin);
         bLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,8 +66,10 @@ public class LoginFragment extends BaseFragment {
                                         Toast.makeText(getContext(),R.string.invalidusername,Toast.LENGTH_LONG).show();
                                     else
                                     {
+                                        menu = GetMain().getMainMenu();
                                         GetMain().setUserId(res.getInt("UserId"));
                                         GetMain().setUserName(res.getString("Name"));
+                                        GetMain().setLevelId(res.getInt("LevelId"));
 
                                         GetMain().getSocket().emit("iam",res.get("UserId"));
                                         switch(Integer.parseInt(res.get("LevelId").toString()))
@@ -123,6 +124,9 @@ public class LoginFragment extends BaseFragment {
         ((EditText) v.findViewById(R.id.tbUserName)).requestFocus();
         return v;
     }
+
+
+
 
 
 }
