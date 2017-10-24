@@ -43,6 +43,28 @@ public class PatientMainFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View v = inflater.inflate(R.layout.fragment_patient_main, container, false);
+
+        Button bNewIssue = (Button) v.findViewById(R.id.bNewIssue);
+        bNewIssue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                GetMain().gotoFragment(new IssueTargetFragment());
+            }
+        });
+
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                PopulateListViews();
+            }
+        }, 0, 5000);
+
+        return v;
+    }
+
+    private void PopulateListViews() {
+        final View v = getView();
         Requests.IssuesNotClosed(GetMain().getSessionId(), getContext(), new ServerAPICallback() {
             @Override
             public void onResult(String result) {
@@ -95,26 +117,6 @@ public class PatientMainFragment extends BaseFragment {
             }
         });
 
-        Button bNewIssue = (Button) v.findViewById(R.id.bNewIssue);
-        bNewIssue.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                GetMain().gotoFragment(new IssueTargetFragment());
-            }
-        });
-
-        timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                MainActivity main = GetMain();
-                if (main == null)
-                    return;
-                main.gotoFragmentFast(new PatientMainFragment());
-            }
-        }, 5000);
-
-        return v;
     }
 
 

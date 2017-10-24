@@ -17,17 +17,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/Base.DialogWindowTitle.AppCompat"
-            android:text="@string/login"
+            android:text="@string/RegisterUser"
             />
         <EditText
-            android:layout_width="600px"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:id="@+id/tbUserName"
-            android:hint="@string/username"
+            android:id="@+id/tbRegEmail"
+            android:hint="@string/email"
             />
         <EditText
-            android:layout_width="600px"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:id="@+id/tbName"
+            android:hint="@string/fullname"
+            />
+        <EditText
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
             android:id="@+id/tbPassword"
@@ -39,27 +46,36 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             >
-
-
-            <TextView
-                android:id="@+id/lRegistration"
+            <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.6"
+                android:id="@+id/cbTAC"
+                android:text="@string/iaccept"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:autoLink="all"
                 android:linksClickable="true"
                 android:textColor="@color/lgreen"
-                android:text="@string/registration" />
-
-            <Button
+                android:text=" " />
+            <TextView
+                android:id="@+id/lTAC"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/login"
-                android:layout_weight="0.4"
-                android:layout_gravity="end"
-                android:id="@+id/bLogin"
-                />
+                android:autoLink="all"
+                android:linksClickable="true"
+                android:textColor="@color/lgreen"
+                android:text="@string/thetermsandconditions" />
+
         </LinearLayout>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/register"
+            android:layout_gravity="end"
+            android:id="@+id/bRegister"
+            />
 
 
     </android.support.v7.widget.LinearLayoutCompat>

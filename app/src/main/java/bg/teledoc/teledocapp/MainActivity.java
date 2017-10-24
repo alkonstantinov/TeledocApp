@@ -2,6 +2,7 @@ package bg.teledoc.teledocapp;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -24,8 +25,10 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
 import java.util.Locale;
+import java.util.Stack;
 
 import bg.teledoc.teledocapp.Callbacks.ServerAPICallback;
 import bg.teledoc.teledocapp.Requests.Requests;
@@ -150,96 +153,197 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        prevFragments = new Stack<Fragment>();
         MainActivity.verifyStoragePermissions(this);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         MainActivity.setMain(this);
-        issue = new JSONObject();
-        CheckInternet();
-        Requests.GetSessionId(this, new ServerAPICallback() {
-            @Override
-            public void onResult(String result) {
+
+        if (savedInstanceState != null) {
+            try {
+                issue = new JSONObject(savedInstanceState.getString("issue"));
+                sessionId = savedInstanceState.getString("sessionId");
+                if (savedInstanceState.containsKey("levelId")) {
+                    levelId = savedInstanceState.getInt("levelId");
+                    userId = savedInstanceState.getInt("userId");
+                    userName = savedInstanceState.getString("userName");
+                }
                 try {
-                    JSONObject res = new JSONObject(result);
-                    setSessionId(res.get("sessionId").toString());
-                    gotoFragment(new LoginFragment());
-                } catch (JSONException e) {
+                    Fragment f = (android.support.v4.app.Fragment) Class.forName(savedInstanceState.getString("fragment")).getConstructor().newInstance();
+                    if (f instanceof IssuePreviewFragment) {
+                        ((IssuePreviewFragment) f).setmIssueId(savedInstanceState.getInt("issueId"));
+                    }
+                    if (f instanceof ChatFragment) {
+                        ((ChatFragment) f).setmIssueId(savedInstanceState.getInt("issueId"));
+                    }
+
+                    gotoFragment(f);
+                    if (savedInstanceState.containsKey("prevFragment")) {
+                        f = (android.support.v4.app.Fragment) Class.forName(savedInstanceState.getString("prevFragment")).getConstructor().newInstance();
+                        if (f instanceof IssuePreviewFragment) {
+                            ((IssuePreviewFragment) f).setmIssueId(savedInstanceState.getInt("prevIssueId"));
+                        }
+                        if (f instanceof ChatFragment) {
+                            ((ChatFragment) f).setmIssueId(savedInstanceState.getInt("prevIssueId"));
+                        }
+                    }
+
+                } catch (InstantiationException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                } catch (NoSuchMethodException e) {
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
+//            outState.putString("fragment", getCurrentFragment().getClass().getName());
+//            if (getCurrentFragment() instanceof IssuePreviewFragment) {
+//                outState.putInt("issueId", ((IssuePreviewFragment) getCurrentFragment()).getmIssueId());
+//            }
+//
+//            if (getCurrentFragment() instanceof ChatFragment) {
+//                outState.putInt("issueId", ((ChatFragment) getCurrentFragment()).getmIssueId());
+//            }
+        } else
 
-            @Override
-            public void onError(Object error) {
+        {
 
-            }
-        });
+            issue = new JSONObject();
+            CheckInternet();
+            Requests.GetSessionId(this, new ServerAPICallback() {
+                @Override
+                public void onResult(String result) {
+                    try {
+                        JSONObject res = new JSONObject(result);
+                        setSessionId(res.get("sessionId").toString());
+                        gotoFragment(new LoginFragment());
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onError(Object error) {
+
+                }
+            });
+
+        }
 
 
-        try {
-            setSocket(IO.socket("http://18.194.18.118"));
-            //setSocket(IO.socket("http://10.0.2.2"));
+        try
 
-        } catch (URISyntaxException e) {
+        {
+            //setSocket(IO.socket("http://18.194.18.118"));
+            setSocket(IO.socket("http://10.0.2.2"));
+
+        } catch (
+                URISyntaxException e)
+
+        {
             e.printStackTrace();
         }
 
 
-        getSocket().on(Socket.EVENT_CONNECT, new Emitter.Listener() {
+        getSocket().
 
-            @Override
-            public void call(Object... args) {
+                on(Socket.EVENT_CONNECT, new Emitter.Listener() {
 
-            }
+                    @Override
+                    public void call(Object... args) {
 
-        }).on("event", new Emitter.Listener() {
+                    }
 
-            @Override
-            public void call(Object... args) {
-            }
+                }).
 
-        }).on("message", new Emitter.Listener() {
+                on("event", new Emitter.Listener() {
 
-            @Override
-            public void call(Object... args) {
+                    @Override
+                    public void call(Object... args) {
+                    }
 
-                ProcessMessage((JSONObject) args[0]);
-            }
+                }).
 
-        }).on("messageimage", new Emitter.Listener() {
+                on("message", new Emitter.Listener() {
 
-            @Override
-            public void call(Object... args) {
+                    @Override
+                    public void call(Object... args) {
 
-                ProcessMessage((JSONObject) args[0]);
-            }
+                        ProcessMessage((JSONObject) args[0]);
+                    }
 
-        }).on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
+                }).
 
-            @Override
-            public void call(Object... args) {
-            }
+                on("messageimage", new Emitter.Listener() {
 
-        });
+                    @Override
+                    public void call(Object... args) {
+
+                        ProcessMessage((JSONObject) args[0]);
+                    }
+
+                }).
+
+                on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
+
+                    @Override
+                    public void call(Object... args) {
+                    }
+
+                });
 
 
         getSocket().connect();
 
     }
 
-//    @Override
-//    public boolean onPrepareOptionsMenu(Menu menu) {
-//        ShowHideLanguageButtons(menu);
-//
-//        return super.onPrepareOptionsMenu(menu);
-//    }
 
-    public void gotoFragment(Fragment mFragment) {
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putString("issue", issue.toString());
+        outState.putString("sessionId", sessionId);
+        if (levelId != null) {
+            outState.putInt("levelId", levelId);
+            outState.putInt("userId", userId);
+            outState.putString("userName", userName);
+        }
+        outState.putString("fragment", getCurrentFragment().getClass().getName());
+        if (getCurrentFragment() instanceof IssuePreviewFragment) {
+            outState.putInt("issueId", ((IssuePreviewFragment) getCurrentFragment()).getmIssueId());
+        }
+
+        if (getCurrentFragment() instanceof ChatFragment) {
+            outState.putInt("issueId", ((ChatFragment) getCurrentFragment()).getmIssueId());
+        }
+
+
+    }
+
+
+    public void gotoFragment(Fragment mFragment, boolean noHist) {
         android.support.v4.app.FragmentTransaction trans = getSupportFragmentManager().beginTransaction();
         trans.setCustomAnimations(R.anim.slide_out_right, R.anim.slide_out_left);
         trans.replace(R.id.screen_content, mFragment);
+        if (!noHist && getCurrentFragment() != null)
+            setPrevFragment(getCurrentFragment());
+
         setCurrentFragment(mFragment);
         trans.commit();
+
+    }
+
+    public void gotoFragment(Fragment mFragment) {
+        gotoFragment(mFragment, false);
 
     }
 
@@ -353,6 +457,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    private Stack<Fragment> prevFragments;
+
+    public android.support.v4.app.Fragment getPrevFragment() {
+
+        if (!prevFragments.empty())
+            return prevFragments.pop();
+        else
+            return null;
+    }
+
+    public void setPrevFragment(android.support.v4.app.Fragment prevFragment) {
+        this.prevFragments.addElement(prevFragment);
+    }
+
     private void ProcessMessage(final JSONObject jo) {
         try {
             if ((this.currentFragment instanceof ChatFragment)
@@ -380,4 +498,21 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+
+    @Override
+    public void onBackPressed() {
+        Fragment f = getPrevFragment();
+
+        if (f != null) {
+            gotoFragment(f, true);
+            if (prevFragments.empty()) {
+                Menu menu = getMainMenu();
+                menu.findItem(R.id.miChangePass).setVisible(false);
+                menu.findItem(R.id.miStart).setVisible(false);
+
+            }
+        }
+    }
+
 }

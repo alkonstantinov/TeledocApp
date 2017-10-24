@@ -25,8 +25,8 @@ import bg.teledoc.teledocapp.Callbacks.ServerAPICallback;
  */
 
 public class Requests {
-    private static String BaseUrl = "http://18.194.18.118/";
-    //private static String BaseUrl = "http://10.0.2.2/";
+    //private static String BaseUrl = "http://18.194.18.118/";
+    private static String BaseUrl = "http://10.0.2.2/";
 
     public static void GetSessionId(Context context, final ServerAPICallback cb) {
         RequestQueue queue = Volley.newRequestQueue(context);
@@ -536,6 +536,76 @@ public class Requests {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("sessionId", sessionId);
                 params.put("issueId", issueId);
+
+                return params;
+            }
+
+        };
+        queue.add(postRequest);
+    }
+
+
+    public static void EmailExists(final String email, Context context, final ServerAPICallback cb) {
+
+        RequestQueue queue = Volley.newRequestQueue(context);
+        final String result;
+        StringRequest postRequest = new StringRequest(Request.Method.POST, BaseUrl + "userexists",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // response
+                        cb.onResult(response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // error
+                        Log.d("Error.Response", error.getMessage());
+                        cb.onError(error.getMessage());
+                    }
+                }
+        ) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("email", email);
+
+                return params;
+            }
+
+        };
+        queue.add(postRequest);
+    }
+
+
+    public static void RegisterPatient(final String email, final String name, final String password, Context context, final ServerAPICallback cb) {
+
+        RequestQueue queue = Volley.newRequestQueue(context);
+        final String result;
+        StringRequest postRequest = new StringRequest(Request.Method.POST, BaseUrl + "registeruser",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // response
+                        cb.onResult(response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // error
+                        Log.d("Error.Response", error.getMessage());
+                        cb.onError(error.getMessage());
+                    }
+                }
+        ) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("email", email);
+                params.put("password", password);
+                params.put("name", name);
 
                 return params;
             }

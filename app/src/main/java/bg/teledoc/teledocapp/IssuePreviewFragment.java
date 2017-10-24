@@ -1,9 +1,6 @@
 package bg.teledoc.teledocapp;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,7 +40,7 @@ public class IssuePreviewFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mIssueId = getArguments().getInt(IssueId_PARAM);
+            setmIssueId(getArguments().getInt(IssueId_PARAM));
         }
     }
 
@@ -53,7 +50,7 @@ public class IssuePreviewFragment extends BaseFragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_issue_preview, container, false);
 
-        Requests.IssueGet(GetMain().getSessionId(), mIssueId, getContext(), new ServerAPICallback() {
+        Requests.IssueGet(GetMain().getSessionId(), getmIssueId(), getContext(), new ServerAPICallback() {
             @Override
             public void onResult(String result) {
                 DisplayIssue(result);
@@ -75,7 +72,7 @@ public class IssuePreviewFragment extends BaseFragment {
         v.findViewById(R.id.bTake).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Requests.TakeIssue(GetMain().getSessionId(), mIssueId, getContext(), new ServerAPICallback() {
+                Requests.TakeIssue(GetMain().getSessionId(), getmIssueId(), getContext(), new ServerAPICallback() {
                     @Override
                     public void onResult(String result) {
 
@@ -151,4 +148,11 @@ public class IssuePreviewFragment extends BaseFragment {
     }
 
 
+    public int getmIssueId() {
+        return mIssueId;
+    }
+
+    public void setmIssueId(int mIssueId) {
+        this.mIssueId = mIssueId;
+    }
 }

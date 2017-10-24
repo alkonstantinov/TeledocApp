@@ -56,8 +56,8 @@ public class uploadFileToServerTask extends AsyncTask<String, String, Object> {
             int maxBufferSize = 1 * 1024 * 1024;
 
 
-            java.net.URL url = new URL("http://18.194.18.118/uploadimage");
-            //java.net.URL url = new URL("http://10.0.2.2/uploadimage");
+            //java.net.URL url = new URL("http://18.194.18.118/uploadimage");
+            java.net.URL url = new URL("http://10.0.2.2/uploadimage");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
             connection.setChunkedStreamingMode(bytes.length);

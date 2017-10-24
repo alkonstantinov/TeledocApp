@@ -6,8 +6,12 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="login">Вход</string>
+    <string name="tologin">Към вход</string>
     <string name="username">Имейл</string>
     <string name="password">Парола</string>
+    <string name="invalidmail">Невалиден имейл</string>
+    <string name="invalidname">Невалидно име на потребител</string>
+    <string name="invalidpassword">Невалиднa парола</string>
     <string name="invalidusername">Невалиден имейл или парола</string>
     <string name="forgottenpassword">Забравена парола</string>
     <string name="registration">Регистрация</string>

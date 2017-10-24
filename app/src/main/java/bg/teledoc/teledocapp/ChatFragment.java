@@ -10,7 +10,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,22 +23,15 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-
 import com.bumptech.glide.Glide;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.List;
-
 import bg.teledoc.teledocapp.Callbacks.ServerAPICallback;
 import bg.teledoc.teledocapp.Requests.Requests;
 import bg.teledoc.teledocapp.Requests.uploadFileToServerTask;
@@ -101,6 +93,8 @@ public class ChatFragment extends BaseFragment {
 
     private int mIssueId;
 
+    private int imagesToLoadCount = 0;
+
     private ScrollView svChat;
 
     private LinearLayout llChat;
@@ -127,10 +121,7 @@ public class ChatFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            setmIssueId(getArguments().getInt(IssueId_PARAM));
-            GetMain().getSocket().emit("room", "issue_" + getmIssueId());
-        }
+
     }
 
     @Override
@@ -138,9 +129,13 @@ public class ChatFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_chat, container, false);
-
+        if (getArguments() != null) {
+            setmIssueId(getArguments().getInt(IssueId_PARAM));
+            GetMain().getSocket().emit("room", "issue_" + getmIssueId());
+        }
         llChat = (LinearLayout) v.findViewById(R.id.llChat);
         svChat = (ScrollView) v.findViewById(R.id.svChat);
+
         tbMsg = (EditText) v.findViewById(R.id.tbMsg);
         bSend = (ImageButton) v.findViewById(R.id.bSend);
         bSend.setOnClickListener(new View.OnClickListener() {
@@ -175,21 +170,21 @@ public class ChatFragment extends BaseFragment {
             }
         });
 
-        bEndChat = (ImageButton)v.findViewById(R.id.bEndChat);
+        bEndChat = (ImageButton) v.findViewById(R.id.bEndChat);
         bEndChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 JSONObject jo = new JSONObject();
                 try {
-                    jo.put("room", "issue_"+mIssueId);
+                    jo.put("room", "issue_" + mIssueId);
                     jo.put("issueId", mIssueId);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
                 GetMain().getSocket().emit("endchat", jo);
-                if (GetMain().getLevelId()==4)
-                GetMain().gotoFragment(new PatientMainFragment());
+                if (GetMain().getLevelId() == 4)
+                    GetMain().gotoFragment(new PatientMainFragment());
                 else
                     GetMain().gotoFragment(new ExpertMainFragment());
             }
@@ -242,7 +237,8 @@ public class ChatFragment extends BaseFragment {
                             // scroll_view.fullScroll(View.FOCUS_DOWN);
 
                             // This method works even better because there are no animations.
-                            svChat.scrollTo(0, svChat.getBottom());
+                            //svChat.scrollTo(0, svChat.getBottom());
+                            svChat.fullScroll(View.FOCUS_DOWN);
                         }
                     });
                 } catch (JSONException e) {
@@ -259,16 +255,6 @@ public class ChatFragment extends BaseFragment {
     }
 
 
-    public Drawable drawableFromUrl(String url) throws IOException {
-        Bitmap x;
-
-        HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
-        connection.connect();
-        InputStream input = connection.getInputStream();
-
-        x = BitmapFactory.decodeStream(input);
-        return new BitmapDrawable(x);
-    }
 
     public void showImage(int chatId) {
         Dialog builder = new Dialog(getContext());
@@ -289,8 +275,8 @@ public class ChatFragment extends BaseFragment {
 
         iv.setLayoutParams(p);
 
-        Glide.with(this).load("http://18.194.18.118/getchatimage?ChatId=" + chatId).into(iv);
-        //Glide.with(this).load("http://10.0.2.2/getchatimage?ChatId=" + chatId).into(iv);
+        //Glide.with(this).load("http://18.194.18.118/getchatimage?ChatId=" + chatId).into(iv);
+        Glide.with(this).load("http://10.0.2.2/getchatimage?ChatId=" + chatId).into(iv);
 
         //new DownloadImageTask(iv, true).execute("http://10.0.2.2/getchatimage?ChatId=" + chatId);
 
@@ -336,22 +322,25 @@ public class ChatFragment extends BaseFragment {
                 data.put("hasimg", false);
                 AddMessage(data);
 
+                imagesToLoadCount++;
 
                 TextView tvEmpty = new TextView(getContext());
                 final ImageView iv = new ImageView(getContext());
 
-                LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(1, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+                LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(100, 100);
                 p.weight = (float) 0.5;
 
                 tvEmpty.setLayoutParams(p);
                 iv.setLayoutParams(p);
+                iv.setAdjustViewBounds(true);
 
 
                 //new DownloadImageTask(iv, false).execute("http://10.0.2.2/getchatimage?ChatId=" + data.getString("chatid"));
 
 
-                //Glide.with(this).load("http://10.0.2.2/getchatimage?ChatId=" + data.getString("chatid")).into(iv);
-                Glide.with(this).load("http://18.194.18.118/getchatimage?ChatId=" + data.getString("chatid")).into(iv);
+                Glide.with(this).load("http://10.0.2.2/getchatimage?ChatId=" + data.getString("chatid")).into(iv);
+                //Glide.with(this).load("http://18.194.18.118/getchatimage?ChatId=" + data.getString("chatid")).into(iv);
                 iv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -382,6 +371,10 @@ public class ChatFragment extends BaseFragment {
 
 
     }
+
+
+
+
 
 
 }

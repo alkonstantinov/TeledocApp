@@ -39,15 +39,30 @@ public class ExpertMainFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View v = inflater.inflate(R.layout.fragment_expert_main, container, false);
-        Requests.IssuesByExpert (GetMain().getSessionId(), getContext(), new ServerAPICallback() {
+
+
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                PopulateListViews();
+            }
+        }, 0, 5000);
+
+        return v;
+    }
+
+    private void PopulateListViews() {
+        final View v = getView();
+        Requests.IssuesByExpert(GetMain().getSessionId(), getContext(), new ServerAPICallback() {
             @Override
             public void onResult(String result) {
                 try {
                     JSONArray jarr = new JSONArray(result);
                     ArrayList<JSONObject> arr = new ArrayList<JSONObject>();
 
-                    for (int i=0;i<jarr.length();i++) {
-                        JSONObject obj = (JSONObject)jarr.get(i);
+                    for (int i = 0; i < jarr.length(); i++) {
+                        JSONObject obj = (JSONObject) jarr.get(i);
                         arr.add(obj);
                     }
                     IssuesByExpertAdapter adapter = new IssuesByExpertAdapter(getContext(), arr);
@@ -67,15 +82,15 @@ public class ExpertMainFragment extends BaseFragment {
 
 //
 
-        Requests.IssuesTaken (GetMain().getSessionId(), getContext(), new ServerAPICallback() {
+        Requests.IssuesTaken(GetMain().getSessionId(), getContext(), new ServerAPICallback() {
             @Override
             public void onResult(String result) {
                 try {
                     JSONArray jarr = new JSONArray(result);
                     ArrayList<JSONObject> arr = new ArrayList<JSONObject>();
 
-                    for (int i=0;i<jarr.length();i++) {
-                        JSONObject obj = (JSONObject)jarr.get(i);
+                    for (int i = 0; i < jarr.length(); i++) {
+                        JSONObject obj = (JSONObject) jarr.get(i);
                         arr.add(obj);
                     }
                     IssuesTakenAdapter adapter = new IssuesTakenAdapter(getContext(), arr);
@@ -101,8 +116,8 @@ public class ExpertMainFragment extends BaseFragment {
                     JSONArray jarr = new JSONArray(result);
                     ArrayList<JSONObject> arr = new ArrayList<JSONObject>();
 
-                    for (int i=0;i<jarr.length();i++) {
-                        JSONObject obj = (JSONObject)jarr.get(i);
+                    for (int i = 0; i < jarr.length(); i++) {
+                        JSONObject obj = (JSONObject) jarr.get(i);
                         arr.add(obj);
                     }
                     IssuesClosedAdapter adapter = new IssuesClosedAdapter(getContext(), arr);
@@ -119,19 +134,6 @@ public class ExpertMainFragment extends BaseFragment {
 
             }
         });
-
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask(){
-            @Override
-            public void run(){
-                MainActivity main = GetMain();
-                if (main == null)
-                    return;
-                main.gotoFragmentFast(new ExpertMainFragment());
-            }
-        }, 5000);
-
-        return v;
     }
 
 

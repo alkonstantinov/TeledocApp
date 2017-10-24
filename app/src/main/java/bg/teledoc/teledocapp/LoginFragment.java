@@ -46,6 +46,15 @@ public class LoginFragment extends BaseFragment {
 
         final View v = inflater.inflate(R.layout.fragment_login, container, false);
 
+        v.findViewById(R.id.lRegistration).setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        GetMain().gotoFragment(new RegistrationFragment());
+                    }
+                }
+        );
+
         Button bLogin = (Button) v.findViewById(R.id.bLogin);
         bLogin.setOnClickListener(new View.OnClickListener() {
             @Override
