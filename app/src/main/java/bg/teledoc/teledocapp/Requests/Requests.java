@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import bg.teledoc.teledocapp.Callbacks.ServerAPICallback;
+import bg.teledoc.teledocapp.R;
 
 /**
  * Created by alkon on 21-Sep-17.
@@ -26,13 +27,13 @@ import bg.teledoc.teledocapp.Callbacks.ServerAPICallback;
 
 public class Requests {
     //private static String BaseUrl = "http://18.194.18.118/";
-    private static String BaseUrl = "http://10.0.2.2/";
+
 
     public static void GetSessionId(Context context, final ServerAPICallback cb) {
         RequestQueue queue = Volley.newRequestQueue(context);
         final String result;
 
-        StringRequest getRequest = new StringRequest(Request.Method.GET, BaseUrl + "getsessionid",
+        StringRequest getRequest = new StringRequest(Request.Method.GET, context.getResources().getString(R.string.ServerAddress) + "/getsessionid",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -55,7 +56,7 @@ public class Requests {
     public static void Login(final String username, final String password, final String sessionId, Context context, final ServerAPICallback cb) {
         RequestQueue queue = Volley.newRequestQueue(context);
         final String result;
-        StringRequest postRequest = new StringRequest(Request.Method.POST, BaseUrl + "login",
+        StringRequest postRequest = new StringRequest(Request.Method.POST, context.getResources().getString(R.string.ServerAddress) + "/login",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -90,7 +91,7 @@ public class Requests {
     public static void IssuesNotClosed(final String sessionId, Context context, final ServerAPICallback cb) {
         RequestQueue queue = Volley.newRequestQueue(context);
         final String result;
-        StringRequest postRequest = new StringRequest(Request.Method.POST, BaseUrl + "getissuesnotclosed",
+        StringRequest postRequest = new StringRequest(Request.Method.POST, context.getResources().getString(R.string.ServerAddress) + "/getissuesnotclosed",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -122,7 +123,7 @@ public class Requests {
     public static void IssuesClosed(final String sessionId, Context context, final ServerAPICallback cb) {
         RequestQueue queue = Volley.newRequestQueue(context);
         final String result;
-        StringRequest postRequest = new StringRequest(Request.Method.POST, BaseUrl + "getclosedissues",
+        StringRequest postRequest = new StringRequest(Request.Method.POST, context.getResources().getString(R.string.ServerAddress) + "/getclosedissues",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -153,7 +154,7 @@ public class Requests {
     public static void IssuesByExpert(final String sessionId, Context context, final ServerAPICallback cb) {
         RequestQueue queue = Volley.newRequestQueue(context);
         final String result;
-        StringRequest postRequest = new StringRequest(Request.Method.POST, BaseUrl + "getissuesbyexpert",
+        StringRequest postRequest = new StringRequest(Request.Method.POST, context.getResources().getString(R.string.ServerAddress) + "/getissuesbyexpert",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -184,7 +185,7 @@ public class Requests {
     public static void IssuesTaken(final String sessionId, Context context, final ServerAPICallback cb) {
         RequestQueue queue = Volley.newRequestQueue(context);
         final String result;
-        StringRequest postRequest = new StringRequest(Request.Method.POST, BaseUrl + "gettakenissues",
+        StringRequest postRequest = new StringRequest(Request.Method.POST, context.getResources().getString(R.string.ServerAddress) + "/gettakenissues",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -216,7 +217,7 @@ public class Requests {
     public static void IssueGet(final String sessionId, final int issueId, Context context, final ServerAPICallback cb) {
         RequestQueue queue = Volley.newRequestQueue(context);
         final String result;
-        StringRequest postRequest = new StringRequest(Request.Method.POST, BaseUrl + "getissue",
+        StringRequest postRequest = new StringRequest(Request.Method.POST, context.getResources().getString(R.string.ServerAddress) + "/getissue",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -248,7 +249,7 @@ public class Requests {
     public static void IssueLastGet(final String sessionId, final int whoId, Context context, final ServerAPICallback cb) {
         RequestQueue queue = Volley.newRequestQueue(context);
         final String result;
-        StringRequest postRequest = new StringRequest(Request.Method.POST, BaseUrl + "getlastissue",
+        StringRequest postRequest = new StringRequest(Request.Method.POST, context.getResources().getString(R.string.ServerAddress) + "/getlastissue",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -280,7 +281,7 @@ public class Requests {
     public static void SymptomsGet(final String sessionId, Context context, final ServerAPICallback cb) {
         RequestQueue queue = Volley.newRequestQueue(context);
         final String result;
-        StringRequest postRequest = new StringRequest(Request.Method.POST, BaseUrl + "getsymptoms",
+        StringRequest postRequest = new StringRequest(Request.Method.POST, context.getResources().getString(R.string.ServerAddress) + "/getsymptoms",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -312,7 +313,7 @@ public class Requests {
     public static void SinceGet(final String sessionId, Context context, final ServerAPICallback cb) {
         RequestQueue queue = Volley.newRequestQueue(context);
         final String result;
-        StringRequest postRequest = new StringRequest(Request.Method.POST, BaseUrl + "getsinces",
+        StringRequest postRequest = new StringRequest(Request.Method.POST, context.getResources().getString(R.string.ServerAddress) + "/getsinces",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -345,7 +346,7 @@ public class Requests {
     public static void ChronicsGet(final String sessionId, Context context, final ServerAPICallback cb) {
         RequestQueue queue = Volley.newRequestQueue(context);
         final String result;
-        StringRequest postRequest = new StringRequest(Request.Method.POST, BaseUrl + "getchronics",
+        StringRequest postRequest = new StringRequest(Request.Method.POST, context.getResources().getString(R.string.ServerAddress) + "/getchronics",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -378,7 +379,7 @@ public class Requests {
     public static void ChangePass(final String sessionId, final String pass, Context context, final ServerAPICallback cb) {
         RequestQueue queue = Volley.newRequestQueue(context);
         final String result;
-        StringRequest postRequest = new StringRequest(Request.Method.POST, BaseUrl + "changepass",
+        StringRequest postRequest = new StringRequest(Request.Method.POST, context.getResources().getString(R.string.ServerAddress) + "/changepass",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -412,7 +413,7 @@ public class Requests {
 
         RequestQueue queue = Volley.newRequestQueue(context);
         final String result;
-        StringRequest postRequest = new StringRequest(Request.Method.POST, BaseUrl + "takeissue",
+        StringRequest postRequest = new StringRequest(Request.Method.POST, context.getResources().getString(R.string.ServerAddress) + "/takeissue",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -446,7 +447,7 @@ public class Requests {
 
         RequestQueue queue = Volley.newRequestQueue(context);
         final String result;
-        StringRequest postRequest = new StringRequest(Request.Method.POST, BaseUrl + "setissue",
+        StringRequest postRequest = new StringRequest(Request.Method.POST, context.getResources().getString(R.string.ServerAddress) + "/setissue",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -480,7 +481,7 @@ public class Requests {
 
         RequestQueue queue = Volley.newRequestQueue(context);
         final String result;
-        StringRequest postRequest = new StringRequest(Request.Method.POST, BaseUrl + "restartchat",
+        StringRequest postRequest = new StringRequest(Request.Method.POST, context.getResources().getString(R.string.ServerAddress) + "/restartchat",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -514,7 +515,7 @@ public class Requests {
 
         RequestQueue queue = Volley.newRequestQueue(context);
         final String result;
-        StringRequest postRequest = new StringRequest(Request.Method.POST, BaseUrl + "getchat",
+        StringRequest postRequest = new StringRequest(Request.Method.POST, context.getResources().getString(R.string.ServerAddress) + "/getchat",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -549,7 +550,7 @@ public class Requests {
 
         RequestQueue queue = Volley.newRequestQueue(context);
         final String result;
-        StringRequest postRequest = new StringRequest(Request.Method.POST, BaseUrl + "userexists",
+        StringRequest postRequest = new StringRequest(Request.Method.POST, context.getResources().getString(R.string.ServerAddress) + "/userexists",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -583,7 +584,7 @@ public class Requests {
 
         RequestQueue queue = Volley.newRequestQueue(context);
         final String result;
-        StringRequest postRequest = new StringRequest(Request.Method.POST, BaseUrl + "registeruser",
+        StringRequest postRequest = new StringRequest(Request.Method.POST, context.getResources().getString(R.string.ServerAddress) + "/registeruser",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -606,6 +607,41 @@ public class Requests {
                 params.put("email", email);
                 params.put("password", password);
                 params.put("name", name);
+
+                return params;
+            }
+
+        };
+        queue.add(postRequest);
+    }
+
+
+    public static void IssueCanChat (final String sessionId, final String issueId, Context context, final ServerAPICallback cb) {
+
+        RequestQueue queue = Volley.newRequestQueue(context);
+        final String result;
+        StringRequest postRequest = new StringRequest(Request.Method.POST, context.getResources().getString(R.string.ServerAddress) + "/issuecanchat",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // response
+                        cb.onResult(response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // error
+                        Log.d("Error.Response", error.getMessage());
+                        cb.onError(error.getMessage());
+                    }
+                }
+        ) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("sessionId", sessionId);
+                params.put("issueId", issueId);
 
                 return params;
             }

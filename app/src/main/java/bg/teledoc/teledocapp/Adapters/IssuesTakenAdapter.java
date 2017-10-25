@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import org.json.JSONException;
@@ -11,6 +12,9 @@ import org.json.JSONObject;
 
 import java.util.List;
 
+import bg.teledoc.teledocapp.ChatFragment;
+import bg.teledoc.teledocapp.IssuePreviewFragment;
+import bg.teledoc.teledocapp.MainActivity;
 import bg.teledoc.teledocapp.R;
 import bg.teledoc.teledocapp.Tools.Tools;
 
@@ -38,9 +42,17 @@ public class IssuesTakenAdapter extends android.widget.ArrayAdapter<JSONObject> 
             e.printStackTrace();
         }
 
-        TextView tvDescription = (TextView)convertView.findViewById(R.id.tvDescription);
+        final TextView tvDescription = (TextView)convertView.findViewById(R.id.tvDescription);
         try {
             tvDescription.setText(jobj.getString("description"));
+            tvDescription.setTag(jobj.getInt("issueid"));
+            tvDescription.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int issueId = (int)tvDescription.getTag();
+                    MainActivity.getMain().gotoFragment(IssuePreviewFragment.newInstance(issueId));
+                }
+            });
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -55,6 +67,22 @@ public class IssuesTakenAdapter extends android.widget.ArrayAdapter<JSONObject> 
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        final ImageButton bShowChat = (ImageButton)convertView.findViewById(R.id.bShowChat);
+        try {
+            bShowChat.setTag(jobj.getInt("issueid"));
+            if(jobj.getInt("answertypeid")!=1)
+                bShowChat.setVisibility(View.INVISIBLE);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        bShowChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int issueId = (int)bShowChat.getTag();
+                MainActivity.getMain().gotoFragment(ChatFragment.newInstance(issueId));
+            }
+        });
 
 
         return convertView;

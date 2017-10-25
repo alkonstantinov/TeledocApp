@@ -15,6 +15,7 @@ import org.json.JSONObject;
 import java.util.List;
 
 import bg.teledoc.teledocapp.Callbacks.ServerAPICallback;
+import bg.teledoc.teledocapp.ChatFragment;
 import bg.teledoc.teledocapp.MainActivity;
 import bg.teledoc.teledocapp.R;
 import bg.teledoc.teledocapp.Requests.Requests;
@@ -81,6 +82,21 @@ public class IssuesClosedAdapter extends android.widget.ArrayAdapter<JSONObject>
             }
         });
 
+        final ImageButton bShowChat = (ImageButton)convertView.findViewById(R.id.bShowChat);
+        try {
+            bShowChat.setTag(jobj.getInt("issueid"));
+            if(jobj.getInt("answertypeid")!=1)
+                bShowChat.setVisibility(View.INVISIBLE);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        bShowChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int issueId = (int)bShowChat.getTag();
+                MainActivity.getMain().gotoFragment(ChatFragment.newInstance(issueId));
+            }
+        });
 
 
 

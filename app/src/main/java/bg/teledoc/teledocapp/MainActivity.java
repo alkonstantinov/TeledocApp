@@ -29,6 +29,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
 import java.util.Locale;
 import java.util.Stack;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import bg.teledoc.teledocapp.Callbacks.ServerAPICallback;
 import bg.teledoc.teledocapp.Requests.Requests;
@@ -304,6 +306,21 @@ public class MainActivity extends AppCompatActivity {
 
 
         getSocket().connect();
+
+
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if(getCurrentFragment() instanceof PatientMainFragment)
+                    ((PatientMainFragment)getCurrentFragment()).PopulateListViews();
+                else
+                if(getCurrentFragment() instanceof ExpertMainFragment)
+                    ((ExpertMainFragment)getCurrentFragment()).PopulateListViews();
+
+            }
+        }, 0, 5000);
+
 
     }
 

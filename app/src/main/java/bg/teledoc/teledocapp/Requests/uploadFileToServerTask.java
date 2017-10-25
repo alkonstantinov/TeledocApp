@@ -15,6 +15,7 @@ import java.net.URL;
 import java.util.UUID;
 
 import bg.teledoc.teledocapp.MainActivity;
+import bg.teledoc.teledocapp.R;
 
 /**
  * Created by alkon on 18-Oct-17.
@@ -56,8 +57,7 @@ public class uploadFileToServerTask extends AsyncTask<String, String, Object> {
             int maxBufferSize = 1 * 1024 * 1024;
 
 
-            //java.net.URL url = new URL("http://18.194.18.118/uploadimage");
-            java.net.URL url = new URL("http://10.0.2.2/uploadimage");
+            java.net.URL url = new URL(args[1] + "/uploadimage");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
             connection.setChunkedStreamingMode(bytes.length);
@@ -79,6 +79,7 @@ public class uploadFileToServerTask extends AsyncTask<String, String, Object> {
 
                 outputStream.writeBytes(twoHyphens + boundary + lineEnd);
                 this.issueId = args[0];
+
 
                 outputStream.writeBytes("Content-Disposition: form-data; name=\"file\";filename=\"" + UUID.randomUUID().toString() + ".jpg\"" + lineEnd);
                 outputStream.writeBytes(lineEnd);

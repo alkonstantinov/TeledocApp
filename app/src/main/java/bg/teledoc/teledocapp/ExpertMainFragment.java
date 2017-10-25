@@ -41,18 +41,11 @@ public class ExpertMainFragment extends BaseFragment {
         final View v = inflater.inflate(R.layout.fragment_expert_main, container, false);
 
 
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                PopulateListViews();
-            }
-        }, 0, 5000);
 
         return v;
     }
 
-    private void PopulateListViews() {
+    public void PopulateListViews() {
         final View v = getView();
         Requests.IssuesByExpert(GetMain().getSessionId(), getContext(), new ServerAPICallback() {
             @Override

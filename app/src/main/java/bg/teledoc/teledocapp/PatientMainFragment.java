@@ -52,18 +52,11 @@ public class PatientMainFragment extends BaseFragment {
             }
         });
 
-        timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                PopulateListViews();
-            }
-        }, 0, 5000);
 
         return v;
     }
 
-    private void PopulateListViews() {
+    public void PopulateListViews() {
         final View v = getView();
         Requests.IssuesNotClosed(GetMain().getSessionId(), getContext(), new ServerAPICallback() {
             @Override

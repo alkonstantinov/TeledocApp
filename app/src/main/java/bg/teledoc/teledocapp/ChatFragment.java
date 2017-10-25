@@ -23,15 +23,19 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
 import com.bumptech.glide.Glide;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
 import bg.teledoc.teledocapp.Callbacks.ServerAPICallback;
 import bg.teledoc.teledocapp.Requests.Requests;
 import bg.teledoc.teledocapp.Requests.uploadFileToServerTask;
@@ -191,6 +195,22 @@ public class ChatFragment extends BaseFragment {
         });
 
         GetChat();
+
+        Requests.IssueCanChat(GetMain().getSessionId(), "" + this.getmIssueId(), getContext(), new ServerAPICallback() {
+            @Override
+            public void onResult(String result) {
+                if (result.equals("true"))
+                    getView().findViewById(R.id.llButtons).setVisibility(View.VISIBLE);
+                else
+                    getView().findViewById(R.id.llButtons).setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onError(Object error) {
+
+            }
+        });
+
         return v;
     }
 
@@ -213,7 +233,7 @@ public class ChatFragment extends BaseFragment {
 //                e.printStackTrace();
 //            }
 
-            new uploadFileToServerTask(bytes.toByteArray()).execute(mIssueId + "");
+            new uploadFileToServerTask(bytes.toByteArray()).execute(mIssueId + "", getResources().getString(R.string.ServerAddress));
         }
     }
 
@@ -255,7 +275,6 @@ public class ChatFragment extends BaseFragment {
     }
 
 
-
     public void showImage(int chatId) {
         Dialog builder = new Dialog(getContext());
         builder.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -275,10 +294,8 @@ public class ChatFragment extends BaseFragment {
 
         iv.setLayoutParams(p);
 
-        //Glide.with(this).load("http://18.194.18.118/getchatimage?ChatId=" + chatId).into(iv);
-        Glide.with(this).load("http://10.0.2.2/getchatimage?ChatId=" + chatId).into(iv);
+        Glide.with(this).load(getResources().getString(R.string.ServerAddress) + "getchatimage?ChatId=" + chatId).into(iv);
 
-        //new DownloadImageTask(iv, true).execute("http://10.0.2.2/getchatimage?ChatId=" + chatId);
 
 
         builder.addContentView(iv, new RelativeLayout.LayoutParams(
@@ -336,11 +353,9 @@ public class ChatFragment extends BaseFragment {
                 iv.setAdjustViewBounds(true);
 
 
-                //new DownloadImageTask(iv, false).execute("http://10.0.2.2/getchatimage?ChatId=" + data.getString("chatid"));
 
 
-                Glide.with(this).load("http://10.0.2.2/getchatimage?ChatId=" + data.getString("chatid")).into(iv);
-                //Glide.with(this).load("http://18.194.18.118/getchatimage?ChatId=" + data.getString("chatid")).into(iv);
+                Glide.with(this).load(getResources().getString(R.string.ServerAddress) + "/getchatimage?ChatId=" + data.getString("chatid")).into(iv);
                 iv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -371,10 +386,6 @@ public class ChatFragment extends BaseFragment {
 
 
     }
-
-
-
-
 
 
 }
