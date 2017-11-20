@@ -45,6 +45,12 @@ public class ExpertMainFragment extends BaseFragment {
         return v;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        PopulateListViews();
+    }
+
     public void PopulateListViews() {
         final View v = getView();
         Requests.IssuesByExpert(GetMain().getSessionId(), getContext(), new ServerAPICallback() {

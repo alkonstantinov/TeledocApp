@@ -56,6 +56,12 @@ public class PatientMainFragment extends BaseFragment {
         return v;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        PopulateListViews();
+    }
+
     public void PopulateListViews() {
         final View v = getView();
         Requests.IssuesNotClosed(GetMain().getSessionId(), getContext(), new ServerAPICallback() {

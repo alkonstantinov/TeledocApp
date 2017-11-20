@@ -294,8 +294,7 @@ public class ChatFragment extends BaseFragment {
 
         iv.setLayoutParams(p);
 
-        Glide.with(this).load(getResources().getString(R.string.ServerAddress) + "getchatimage?ChatId=" + chatId).into(iv);
-
+        Glide.with(this).load(getResources().getString(R.string.ServerAddress) + "/getchatimage?ChatId=" + chatId).into(iv);
 
 
         builder.addContentView(iv, new RelativeLayout.LayoutParams(
@@ -353,9 +352,7 @@ public class ChatFragment extends BaseFragment {
                 iv.setAdjustViewBounds(true);
 
 
-
-
-                Glide.with(this).load(getResources().getString(R.string.ServerAddress) + "/getchatimage?ChatId=" + data.getString("chatid")).into(iv);
+                Glide.with(this).load(getResources().getString(R.string.ServerAddress) + "/getchatimage?sid=" + GetMain().getSessionId() + "&ChatId=" + data.getString("chatid")).into(iv);
                 iv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
