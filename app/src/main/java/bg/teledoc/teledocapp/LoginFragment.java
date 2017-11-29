@@ -117,7 +117,7 @@ public class LoginFragment extends BaseFragment {
 
                                 } catch (JSONException e) {
                                     e.printStackTrace();
-                                }
+                                 }
 
 
                             }
